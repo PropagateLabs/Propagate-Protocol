@@ -141,36 +141,60 @@
             margin-top: 2px;
         }
         
-        /* Stats Banner */
-        .stats-banner {
-            background: rgba(26, 26, 46, 0.8);
-            border: 3px solid var(--secondary);
+        /* Top Prize Pool Banner */
+        .top-prize-banner {
+            background: rgba(26, 26, 46, 0.9);
+            border: 5px solid var(--accent);
             border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
-        }
-        
-        .stat-item {
+            padding: 30px;
             text-align: center;
-            padding: 10px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 209, 102, 0.3);
         }
         
-        .stat-value {
-            font-size: 24px;
+        .top-prize-banner::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 209, 102, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .top-prize-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 42px;
+            background: linear-gradient(45deg, #FFD166, #FF9E00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 209, 102, 0.5);
+        }
+        
+        .top-prize-amount {
+            font-size: 56px;
             font-weight: bold;
             color: var(--accent);
-            text-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+            text-shadow: 0 0 25px rgba(255, 209, 102, 0.7);
+            margin-bottom: 15px;
         }
         
-        .stat-label {
-            font-size: 14px;
+        .top-prize-subtitle {
+            font-size: 22px;
             color: var(--secondary);
-            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .top-prize-description {
+            font-size: 18px;
+            color: var(--light);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
         
         /* Main Content */
@@ -326,51 +350,40 @@
             transform: none;
         }
         
-        /* Prize Pool */
-        .prize-pool {
-            background: rgba(26, 26, 46, 0.9);
-            border: 5px solid var(--accent);
+        /* Stats Banner */
+        .stats-banner {
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--secondary);
             border-radius: 20px;
             padding: 25px;
-            text-align: center;
             margin-bottom: 40px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(255, 209, 102, 0.3);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
         }
         
-        .prize-pool::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 209, 102, 0.1) 0%, transparent 70%);
-            z-index: -1;
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
         }
         
-        .prize-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: 32px;
-            background: linear-gradient(45deg, #FFD166, #FF9E00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
-        }
-        
-        .prize-amount {
-            font-size: 48px;
+        .stat-value {
+            font-size: 28px;
             font-weight: bold;
             color: var(--accent);
-            text-shadow: 0 0 20px rgba(255, 209, 102, 0.7);
-            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+            margin-bottom: 5px;
         }
         
-        .prize-subtitle {
-            font-size: 18px;
+        .stat-label {
+            font-size: 16px;
             color: var(--secondary);
-            margin-bottom: 25px;
+            margin-top: 5px;
         }
         
         /* Footer */
@@ -473,6 +486,18 @@
                 width: 100%;
                 justify-content: space-between;
             }
+            
+            .top-prize-title {
+                font-size: 32px;
+            }
+            
+            .top-prize-amount {
+                font-size: 42px;
+            }
+            
+            .top-prize-subtitle {
+                font-size: 18px;
+            }
         }
         
         /* Donate Options */
@@ -561,37 +586,18 @@
             </div>
         </header>
         
-        <div class="stats-banner" id="statsBanner">
-            <div class="stat-item">
-                <div class="stat-value" id="totalSupply">0</div>
-                <div class="stat-label">Total Supply</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="airdropped">0</div>
-                <div class="stat-label">Airdropped</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="swapped">0</div>
-                <div class="stat-label">Swapped</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="tokenPrizePool">0</div>
-                <div class="stat-label">Prize Pool (PPT)</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="totalBurned">0</div>
-                <div class="stat-label">Total Burned</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="currentRate">0</div>
-                <div class="stat-label">Current Rate</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="contractBalance">0 PHRS</div>
-                <div class="stat-label">Contract Balance</div>
+        <!-- Top Prize Pool Banner -->
+        <div class="top-prize-banner" id="topPrizeBanner">
+            <div class="top-prize-title">🎯 DAILY PRIZE POOL 🎯</div>
+            <div class="top-prize-amount" id="topPrizeAmount">Loading Prize Pool...</div>
+            <div class="top-prize-subtitle">Every transfer has 0.01% chance to win 1% of the prize pool!</div>
+            <div class="top-prize-description">
+                Win big when you transfer tokens! The more activity, the bigger the prize pool grows! 
+                Every transaction contributes to the prize pool - 0.5% of each transfer tax goes directly to the prize pool!
             </div>
         </div>
         
+        <!-- Main Content Cards -->
         <div class="main-content">
             <!-- Airdrop Card -->
             <div class="card card-1">
@@ -690,12 +696,36 @@
             </div>
         </div>
         
-        <!-- Prize Pool -->
-        <div class="prize-pool">
-            <div class="prize-title">🎯 DAILY PRIZE POOL 🎯</div>
-            <div class="prize-amount" id="prizeAmount">0 PPT + 0 PHRS</div>
-            <div class="prize-subtitle">Every transfer has 0.01% chance to win 1% of the prize pool!</div>
-            <p>Win big when you transfer tokens! The more activity, the bigger the prize pool grows!</p>
+        <!-- Stats Banner -->
+        <div class="stats-banner" id="statsBanner">
+            <div class="stat-item">
+                <div class="stat-value" id="totalSupply">0</div>
+                <div class="stat-label">Total Supply</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="airdropped">0</div>
+                <div class="stat-label">Airdropped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="swapped">0</div>
+                <div class="stat-label">Swapped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="tokenPrizePool">0</div>
+                <div class="stat-label">Prize Pool (PPT)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalBurned">0</div>
+                <div class="stat-label">Total Burned</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="currentRate">0</div>
+                <div class="stat-label">Current Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="contractBalance">0 PHRS</div>
+                <div class="stat-label">Contract Balance</div>
+            </div>
         </div>
         
         <!-- Footer -->
@@ -768,6 +798,7 @@
             let provider, signer, contract, userAddress, userBalance, userPPTBalance;
             let donateType = "phrs";
             let isAtlanticNetwork = false;
+            let statsInterval;
             
             // 初始化事件监听器
             function setupEventListeners() {
@@ -819,53 +850,44 @@
                 });
             }
             
-            // 初始化web3 - 现在分离出来，以便在切换网络后重新初始化
+            // 初始化web3
             function initializeWeb3() {
                 try {
                     if (typeof window.ethereum !== 'undefined') {
-                        // 创建新的provider实例
                         provider = new ethers.providers.Web3Provider(window.ethereum);
                         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
                         
                         console.log('Web3 initialized successfully');
+                        return true;
                     } else {
                         showNotification("Please install MetaMask to use this dApp!", "error");
                         console.error('MetaMask not detected');
                         return false;
                     }
-                    return true;
                 } catch (error) {
                     console.error('Error initializing Web3:', error);
                     return false;
                 }
             }
             
-            // 添加一个函数来重新初始化Web3连接
-            async function reinitializeWeb3() {
+            // 页面加载时立即获取合约信息
+            async function loadContractInfo() {
                 try {
-                    console.log('Reinitializing Web3 connection...');
-                    
-                    // 清除旧的provider和contract引用
-                    provider = null;
-                    contract = null;
-                    signer = null;
-                    
-                    // 重新初始化
-                    if (initializeWeb3()) {
-                        // 如果已经有用户地址，重新连接
-                        if (userAddress) {
-                            signer = provider.getSigner();
-                            contract = contract.connect(signer);
-                            console.log('Web3 reinitialized and reconnected');
-                            return true;
+                    if (!contract) {
+                        // 如果合约未初始化，尝试初始化
+                        if (!initializeWeb3()) {
+                            return;
                         }
-                        console.log('Web3 reinitialized');
-                        return true;
                     }
-                    return false;
+                    
+                    // 尝试获取合约信息
+                    await updateStats();
+                    
                 } catch (error) {
-                    console.error('Error reinitializing Web3:', error);
-                    return false;
+                    console.error('Error loading contract info:', error);
+                    // 即使出错也显示默认值
+                    document.getElementById('totalSupply').textContent = "1,000,000,000,000";
+                    document.getElementById('topPrizeAmount').textContent = "Prize Pool Loading...";
                 }
             }
             
@@ -881,13 +903,11 @@
                     // 获取当前的链ID
                     let chainId;
                     try {
-                        // 尝试从provider获取网络信息
                         const network = await provider.getNetwork();
                         chainId = network.chainId.toString();
                         console.log('Current chain ID from provider:', chainId);
                     } catch (networkError) {
                         console.log('Error getting network from provider:', networkError);
-                        // 如果provider获取失败，尝试直接从ethereum获取
                         chainId = await window.ethereum.request({ method: 'eth_chainId' });
                         console.log('Current chain ID from ethereum:', chainId);
                     }
@@ -924,7 +944,6 @@
                 try {
                     console.log('Attempting to switch to Atlantic Testnet...');
                     
-                    // 首先尝试使用十进制链ID切换
                     const hexChainId = `0x${ATLANTIC_TESTNET.chainIdDecimal.toString(16)}`;
                     
                     try {
@@ -937,7 +956,6 @@
                     } catch (switchError) {
                         console.log('Switch error:', switchError);
                         
-                        // 如果网络未添加，则添加它
                         if (switchError.code === 4902) {
                             try {
                                 await window.ethereum.request({
@@ -955,11 +973,9 @@
                             } catch (addError) {
                                 console.error('Add error:', addError);
                                 
-                                // 检查是否是相同的RPC端点错误
                                 if (addError.message && addError.message.includes('same RPC endpoint')) {
                                     showNotification("Atlantic Testnet is already in your wallet. Switching...", "info");
                                     
-                                    // 网络已经存在，等待一下然后手动触发chainChanged事件
                                     setTimeout(() => {
                                         window.ethereum.emit('chainChanged', hexChainId);
                                     }, 1000);
@@ -971,9 +987,6 @@
                             throw switchError;
                         }
                     }
-                    
-                    // 重新初始化Web3连接以避免网络变化错误
-                    await reinitializeWeb3();
                     
                     // 等待网络切换完成，然后重新检查
                     setTimeout(() => {
@@ -989,7 +1002,6 @@
                         showNotification("Failed to switch network: " + error.message, "error");
                     }
                     
-                    // 重置按钮
                     const connectBtn = document.getElementById('connectWallet');
                     connectBtn.innerHTML = '<span>Connect Wallet</span>';
                     connectBtn.onclick = checkNetworkAndConnect;
@@ -1004,19 +1016,15 @@
                         return;
                     }
                     
-                    // Request account access
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                     signer = provider.getSigner();
                     userAddress = await signer.getAddress();
                     
-                    // Update contract with signer for transactions
                     contract = contract.connect(signer);
                     
-                    // Update UI
                     updateUI();
                     showNotification("Wallet connected successfully!", "success");
                     
-                    // Update balances and stats
                     await updateBalances();
                     await updateStats();
                     
@@ -1038,14 +1046,12 @@
                         return;
                     }
                     
-                    // 检查是否已连接钱包
                     if (!userAddress) {
                         showNotification("Please connect your wallet first!", "info");
                         await connectWallet();
                         return;
                     }
                     
-                    // 检查是否在Atlantic网络
                     if (!isAtlanticNetwork) {
                         showNotification("Please switch to Atlantic Testnet first!", "info");
                         return;
@@ -1081,10 +1087,8 @@
                 const airdropAddressInput = document.getElementById('airdropAddress');
                 
                 if (userAddress) {
-                    // Shorten address for display
                     const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
                     
-                    // 更新按钮显示，包含地址和余额
                     connectBtn.innerHTML = `
                         <div class="wallet-info">
                             <span>${shortAddress}</span>
@@ -1094,10 +1098,7 @@
                     
                     airdropAddressInput.value = userAddress;
                     
-                    // Check if user has already claimed airdrop
                     checkAirdropStatus();
-                    
-                    // 更新钱包余额显示
                     updateWalletBalanceDisplay();
                 } else {
                     connectBtn.innerHTML = '<span>Connect Wallet</span>';
@@ -1112,11 +1113,9 @@
                 try {
                     if (!provider || !userAddress) return;
                     
-                    // 获取PHRS余额
                     const phrsBalance = await provider.getBalance(userAddress);
                     const phrsBalanceFormatted = ethers.utils.formatEther(phrsBalance);
                     
-                    // 获取PPT余额
                     let pptBalanceFormatted = "0";
                     try {
                         const pptBalance = await contract.balanceOf(userAddress);
@@ -1125,7 +1124,6 @@
                         console.error("Error getting PPT balance:", error);
                     }
                     
-                    // 格式化显示
                     const displayText = `PHRS: ${parseFloat(phrsBalanceFormatted).toFixed(2)} | PPT: ${parseFloat(pptBalanceFormatted).toFixed(2)}`;
                     
                     const walletBalanceDisplay = document.getElementById('walletBalanceDisplay');
@@ -1147,17 +1145,14 @@
                 try {
                     if (!provider || !userAddress) return;
                     
-                    // Get PHRS balance
                     userBalance = await provider.getBalance(userAddress);
                     const phrsBalanceFormatted = ethers.utils.formatEther(userBalance);
                     document.getElementById('phrsBalance').textContent = parseFloat(phrsBalanceFormatted).toFixed(4);
                     
-                    // Get PPT balance
                     userPPTBalance = await contract.balanceOf(userAddress);
                     const pptBalanceFormatted = ethers.utils.formatEther(userPPTBalance);
                     document.getElementById('pptBalance').textContent = formatNumber(pptBalanceFormatted);
                     
-                    // 同时更新钱包按钮上的余额显示
                     updateWalletBalanceDisplay();
                     
                 } catch (error) {
@@ -1172,47 +1167,37 @@
                     
                     const stats = await contract.getStats();
                     
-                    // Format numbers
+                    // 更新顶部奖池显示
+                    const tokenPrizePoolFormatted = formatNumber(ethers.utils.formatEther(stats[3]));
+                    const contractBalanceFormatted = parseFloat(ethers.utils.formatEther(stats[6])).toFixed(2);
+                    document.getElementById('topPrizeAmount').textContent = 
+                        `${tokenPrizePoolFormatted} PPT + ${contractBalanceFormatted} PHRS`;
+                    
+                    // 更新统计信息
                     document.getElementById('totalSupply').textContent = formatNumber(ethers.utils.formatEther(stats[0]));
                     document.getElementById('airdropped').textContent = formatNumber(ethers.utils.formatEther(stats[1]));
                     document.getElementById('swapped').textContent = formatNumber(ethers.utils.formatEther(stats[2]));
                     document.getElementById('tokenPrizePool').textContent = formatNumber(ethers.utils.formatEther(stats[3]));
                     document.getElementById('totalBurned').textContent = formatNumber(ethers.utils.formatEther(stats[4]));
                     
-                    // Get current rate
                     const currentRate = await contract.getCurrentRate();
                     document.getElementById('currentRate').textContent = formatNumber(currentRate.toString());
                     document.getElementById('currentRateDisplay').textContent = formatNumber(currentRate.toString());
                     
-                    // Update contract balance
-                    const contractBalance = ethers.utils.formatEther(stats[6]);
-                    document.getElementById('contractBalance').textContent = parseFloat(contractBalance).toFixed(2) + " PHRS";
-                    
-                    // Update prize pool display
-                    document.getElementById('prizeAmount').textContent = 
-                        `${formatNumber(ethers.utils.formatEther(stats[3]))} PPT + ${parseFloat(contractBalance).toFixed(2)} PHRS`;
+                    document.getElementById('contractBalance').textContent = contractBalanceFormatted + " PHRS";
                     
                 } catch (error) {
                     console.error("Error updating stats:", error);
-                    // Try to get individual stats if getStats fails
-                    updateStatsIndividually();
+                    // 如果合约调用失败，显示默认值
+                    updateStatsFallback();
                 }
             }
             
-            // Fallback for getting stats individually
-            async function updateStatsIndividually() {
-                try {
-                    // Get total supply (from constant)
-                    document.getElementById('totalSupply').textContent = "1T";
-                    
-                    // Get current rate
-                    const currentRate = await contract.getCurrentRate();
-                    document.getElementById('currentRate').textContent = formatNumber(currentRate.toString());
-                    document.getElementById('currentRateDisplay').textContent = formatNumber(currentRate.toString());
-                    
-                } catch (error) {
-                    console.error("Error updating individual stats:", error);
-                }
+            // 合约调用失败时的备选显示
+            function updateStatsFallback() {
+                document.getElementById('totalSupply').textContent = "1,000,000,000,000";
+                document.getElementById('topPrizeAmount').textContent = "Prize Pool Loading...";
+                document.getElementById('currentRateDisplay').textContent = "10,000";
             }
             
             // Check airdrop status
@@ -1256,7 +1241,6 @@
                         return;
                     }
                     
-                    // Check gas estimate
                     const gasEstimate = await contract.estimateGas.claim();
                     const gasPrice = await provider.getGasPrice();
                     const gasCost = gasEstimate.mul(gasPrice);
@@ -1269,7 +1253,6 @@
                     showNotification("Claiming airdrop...", "info");
                     setButtonLoading('claimAirdrop', true);
                     
-                    // Call contract claim function
                     const tx = await contract.claim();
                     await tx.wait();
                     
@@ -1316,16 +1299,13 @@
                         return;
                     }
                     
-                    // Convert to wei
                     const amountWei = ethers.utils.parseEther(amountInput);
                     
-                    // Check if user has enough balance
                     if (userBalance.lt(amountWei)) {
                         showNotification(`Insufficient PHRS balance. You have ${ethers.utils.formatEther(userBalance)} PHRS`, "error");
                         return;
                     }
                     
-                    // Check minimum amount (gas price * 21000)
                     const gasPrice = await provider.getGasPrice();
                     const minAmount = gasPrice.mul(21000);
                     
@@ -1337,7 +1317,6 @@
                     showNotification(`Swapping ${amountInput} PHRS for PPT...`, "info");
                     setButtonLoading('swapTokens', true);
                     
-                    // Call contract swap function with value
                     const tx = await contract.swap({ value: amountWei });
                     await tx.wait();
                     
@@ -1345,7 +1324,6 @@
                     updateStats();
                     updateBalances();
                     
-                    // Clear input
                     document.getElementById('swapAmount').value = "";
                     document.getElementById('pptToReceive').value = "";
                     
@@ -1397,16 +1375,13 @@
                         return;
                     }
                     
-                    // Convert to wei (assuming 18 decimals)
                     const amountWei = ethers.utils.parseEther(amount);
                     
-                    // Check if user has enough PPT balance
                     if (userPPTBalance.lt(amountWei)) {
                         showNotification(`Insufficient PPT balance. You have ${ethers.utils.formatEther(userPPTBalance)} PPT`, "error");
                         return;
                     }
                     
-                    // Check gas estimate
                     const gasEstimate = await contract.estimateGas.transfer(recipient, amountWei);
                     const gasPrice = await provider.getGasPrice();
                     const gasCost = gasEstimate.mul(gasPrice);
@@ -1419,7 +1394,6 @@
                     showNotification(`Transferring ${amount} PPT...`, "info");
                     setButtonLoading('transferTokens', true);
                     
-                    // Call contract transfer function
                     const tx = await contract.transfer(recipient, amountWei);
                     await tx.wait();
                     
@@ -1427,7 +1401,6 @@
                     updateStats();
                     updateBalances();
                     
-                    // Clear inputs
                     document.getElementById('transferAddress').value = "";
                     document.getElementById('transferAmount').value = "";
                     document.getElementById('transferReceive').value = "";
@@ -1459,7 +1432,6 @@
                     }
                     
                     if (donateType === "phrs") {
-                        // Donate PHRS
                         const amountInput = document.getElementById('phrsDonateAmount').value;
                         
                         if (!amountInput || parseFloat(amountInput) <= 0) {
@@ -1467,10 +1439,8 @@
                             return;
                         }
                         
-                        // Convert to wei
                         const amountWei = ethers.utils.parseEther(amountInput);
                         
-                        // Check if user has enough balance
                         if (userBalance.lt(amountWei)) {
                             showNotification(`Insufficient PHRS balance. You have ${ethers.utils.formatEther(userBalance)} PHRS`, "error");
                             return;
@@ -1479,7 +1449,6 @@
                         showNotification(`Donating ${amountInput} PHRS...`, "info");
                         setButtonLoading('donateTokens', true);
                         
-                        // Send PHRS directly to contract (no function call, just value)
                         const tx = await signer.sendTransaction({
                             to: CONTRACT_ADDRESS,
                             value: amountWei
@@ -1489,11 +1458,9 @@
                         
                         showNotification("Donation successful! Thank you for supporting the prize pool!", "success");
                         
-                        // Clear input
                         document.getElementById('phrsDonateAmount').value = "";
                         
                     } else {
-                        // Donate PPT - this is just a transfer to contract address
                         const amountInput = document.getElementById('pptDonateAmount').value;
                         const recipient = CONTRACT_ADDRESS;
                         
@@ -1502,16 +1469,13 @@
                             return;
                         }
                         
-                        // Convert to wei (assuming 18 decimals)
                         const amountWei = ethers.utils.parseEther(amountInput);
                         
-                        // Check if user has enough PPT balance
                         if (userPPTBalance.lt(amountWei)) {
                             showNotification(`Insufficient PPT balance. You have ${ethers.utils.formatEther(userPPTBalance)} PPT`, "error");
                             return;
                         }
                         
-                        // Check gas estimate
                         const gasEstimate = await contract.estimateGas.transfer(recipient, amountWei);
                         const gasPrice = await provider.getGasPrice();
                         const gasCost = gasEstimate.mul(gasPrice);
@@ -1524,13 +1488,11 @@
                         showNotification(`Donating ${amountInput} PPT...`, "info");
                         setButtonLoading('donateTokens', true);
                         
-                        // Call contract transfer function to contract address
                         const tx = await contract.transfer(recipient, amountWei);
                         await tx.wait();
                         
                         showNotification("Donation successful! 1% tax applied (0.5% burned, 0.5% to prize pool).", "success");
                         
-                        // Clear input
                         document.getElementById('pptDonateAmount').value = "";
                     }
                     
@@ -1559,12 +1521,10 @@
                 }
                 
                 try {
-                    // Get current rate from contract
                     const rate = await contract.getCurrentRate();
                     const pptAmount = parseFloat(amount) * parseFloat(rate.toString());
                     document.getElementById('pptToReceive').value = pptAmount.toFixed(2);
                 } catch (error) {
-                    // If contract call fails, use default rate
                     const defaultRate = 10000;
                     const pptAmount = parseFloat(amount) * defaultRate;
                     document.getElementById('pptToReceive').value = pptAmount.toFixed(2);
@@ -1579,7 +1539,6 @@
                     return;
                 }
                 
-                // 1% tax
                 const tax = parseFloat(amount) * 0.01;
                 const received = parseFloat(amount) - tax;
                 document.getElementById('transferReceive').value = received.toFixed(2);
@@ -1603,7 +1562,6 @@
                 notification.className = `notification notification-${type}`;
                 notification.style.display = 'block';
                 
-                // Auto hide after 5 seconds
                 setTimeout(() => {
                     notification.style.display = 'none';
                 }, 5000);
@@ -1633,34 +1591,28 @@
             
             // 初始化应用
             function init() {
-                // 先初始化Web3
                 if (initializeWeb3()) {
                     setupEventListeners();
                     updateDonateUI();
                     
-                    // 监听chainChanged事件
+                    // 页面加载时立即获取合约信息
+                    loadContractInfo();
+                    
+                    // 设置定时器，每30秒更新一次合约信息
+                    statsInterval = setInterval(() => {
+                        loadContractInfo();
+                    }, 30000);
+                    
                     if (window.ethereum) {
                         window.ethereum.on('chainChanged', async (chainId) => {
                             console.log('Chain changed event:', chainId);
-                            // 重新初始化Web3连接
-                            await reinitializeWeb3();
-                            // 重新检查网络和连接
                             setTimeout(checkNetworkAndConnect, 500);
                         });
                     }
                     
-                    // If MetaMask is already connected
                     if (window.ethereum && window.ethereum.selectedAddress) {
                         setTimeout(checkNetworkAndConnect, 500);
                     }
-                    
-                    // Auto-refresh stats every 30 seconds
-                    setInterval(() => {
-                        if (userAddress && isAtlanticNetwork) {
-                            updateStats();
-                            updateBalances();
-                        }
-                    }, 30000);
                     
                     console.log('PPT DApp initialized successfully');
                 }
