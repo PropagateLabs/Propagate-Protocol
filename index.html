@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propagate Protocol Token (PPT) - Meme Revolution!</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap">
+    <!-- 使用备用CDN加载ethers.js -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.0/dist/ethers.min.js"></script>
+    <style>
+        :root {
+            --primary: #FF6B9D;
+            --secondary: #00E5FF;
+            --accent: #FFD166;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --success: #06D6A0;
+            --danger: #EF476F;
+            --meme-gradient: linear-gradient(45deg, #FF6B9D, #00E5FF, #FFD166);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: var(--dark);
+            color: var(--light);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 107, 157, 0.15) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 5px dashed var(--primary);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-img {
+            width: 70px;
+            height: 70px;
+            background: var(--meme-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--dark);
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 20px var(--secondary);
+        }
+        
+        .logo-text {
+            font-family: 'Fredoka One', cursive;
+            font-size: 36px;
+            background: var(--meme-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(255, 107, 157, 0.5);
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .network-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 50px;
+            border: 2px solid var(--secondary);
+        }
+        
+        .connect-wallet, .add-token-btn {
+            background: var(--meme-gradient);
+            color: var(--dark);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+        
+        .add-token-btn {
+            background: linear-gradient(45deg, #FFD166, #FF9E00);
+        }
+        
+        .connect-wallet:hover, .add-token-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .wallet-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+        
+        .wallet-balance {
+            font-size: 12px;
+            font-weight: normal;
+            color: var(--dark);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-top: 2px;
+        }
+        
+        /* Stats Banner */
+        .stats-banner {
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--secondary);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-top: 5px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: rgba(26, 26, 46, 0.8);
+            border-radius: 20px;
+            padding: 25px;
+            border: 3px solid;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-1 {
+            border-color: var(--primary);
+        }
+        
+        .card-2 {
+            border-color: var(--secondary);
+        }
+        
+        .card-3 {
+            border-color: var(--accent);
+        }
+        
+        .card-4 {
+            border-color: var(--success);
+        }
+        
+        .card-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 28px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .card-add-token {
+            background: linear-gradient(45deg, #FFD166, #FF9E00);
+            color: var(--dark);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-family: 'Comic Neue', cursive;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-add-token:hover {
+            transform: scale(1.05);
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--light);
+            font-size: 16px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--secondary);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 16px;
+            font-family: 'Comic Neue', cursive;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+        }
+        
+        .balance-info {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-top: 5px;
+        }
+        
+        .action-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-claim {
+            background: var(--meme-gradient);
+            color: var(--dark);
+        }
+        
+        .btn-swap {
+            background: linear-gradient(45deg, #00E5FF, #06D6A0);
+            color: var(--dark);
+        }
+        
+        .btn-transfer {
+            background: linear-gradient(45deg, #FF6B9D, #EF476F);
+            color: var(--light);
+        }
+        
+        .btn-donate {
+            background: linear-gradient(45deg, #FFD166, #FF9E00);
+            color: var(--dark);
+        }
+        
+        .action-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .action-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Prize Pool */
+        .prize-pool {
+            background: rgba(26, 26, 46, 0.9);
+            border: 5px solid var(--accent);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(255, 209, 102, 0.3);
+        }
+        
+        .prize-pool::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 209, 102, 0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .prize-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 32px;
+            background: linear-gradient(45deg, #FFD166, #FF9E00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .prize-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(255, 209, 102, 0.7);
+            margin-bottom: 10px;
+        }
+        
+        .prize-subtitle {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: 25px;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 5px dashed var(--primary);
+            margin-top: 40px;
+            color: var(--secondary);
+        }
+        
+        .contract-address {
+            background: rgba(0, 229, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 16px;
+            border: 2px solid var(--secondary);
+            cursor: pointer;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+        }
+        
+        .notification-success {
+            background: var(--success);
+            border-left: 5px solid #06b686;
+        }
+        
+        .notification-error {
+            background: var(--danger);
+            border-left: 5px solid #d43c5f;
+        }
+        
+        .notification-info {
+            background: var(--secondary);
+            border-left: 5px solid #00b8d4;
+        }
+        
+        .notification-warning {
+            background: var(--accent);
+            border-left: 5px solid #ffb300;
+            color: var(--dark);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Meme Elements */
+        .meme-emoji {
+            position: absolute;
+            font-size: 40px;
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo-text {
+                font-size: 28px;
+            }
+            
+            .stats-banner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        /* Donate Options */
+        .donate-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .donate-option {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid var(--secondary);
+            background: transparent;
+            color: var(--secondary);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+        }
+        
+        .donate-option.active {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .donate-option:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--light);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading {
+            position: relative;
+            color: transparent !important;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            left: calc(50% - 10px);
+            top: calc(50% - 10px);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--light);
+            animation: spin 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="meme-emoji" style="top: 10%; left: 5%;">🚀</div>
+    <div class="meme-emoji" style="top: 15%; right: 10%;">💎</div>
+    <div class="meme-emoji" style="bottom: 20%; left: 8%;">🔥</div>
+    <div class="meme-emoji" style="bottom: 15%; right: 5%;">🎯</div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-img">PPT</div>
+                <div class="logo-text">Propagate Protocol Token</div>
+            </div>
+            <div class="header-controls">
+                <div class="network-info">
+                    <span id="networkStatus">Network: Not Connected</span>
+                </div>
+                <button class="add-token-btn" id="addTokenBtn">Add PPT to Wallet</button>
+                <button class="connect-wallet" id="connectWallet">
+                    <span>Connect Wallet</span>
+                </button>
+            </div>
+        </header>
+        
+        <div class="stats-banner" id="statsBanner">
+            <div class="stat-item">
+                <div class="stat-value" id="totalSupply">0</div>
+                <div class="stat-label">Total Supply</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="airdropped">0</div>
+                <div class="stat-label">Airdropped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="swapped">0</div>
+                <div class="stat-label">Swapped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="tokenPrizePool">0</div>
+                <div class="stat-label">Prize Pool (PPT)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="totalBurned">0</div>
+                <div class="stat-label">Total Burned</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="currentRate">0</div>
+                <div class="stat-label">Current Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="contractBalance">0 PHRS</div>
+                <div class="stat-label">Contract Balance</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Airdrop Card -->
+            <div class="card card-1">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🎁</span> Free Airdrop Claim
+                    </div>
+                    <button class="card-add-token add-token-card-btn" data-card="airdrop">+ Add PPT</button>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--accent);">Claim your FREE 100 PPT tokens! One claim per wallet.</p>
+                <div class="input-group">
+                    <div class="input-label">Your Wallet Address</div>
+                    <input type="text" class="input-field" id="airdropAddress" placeholder="0x..." readonly>
+                </div>
+                <div class="balance-info" id="airdropStatus">Status: Connect wallet to check</div>
+                <button class="action-button btn-claim" id="claimAirdrop">CLAIM 100 PPT!</button>
+            </div>
+            
+            <!-- Swap Card -->
+            <div class="card card-2">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🔄</span> Swap PHRS for PPT
+                    </div>
+                    <button class="card-add-token add-token-card-btn" data-card="swap">+ Add PPT</button>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--secondary);">Exchange your PHRS for PPT tokens at current rate.</p>
+                <div class="input-group">
+                    <div class="input-label">PHRS Amount</div>
+                    <input type="number" class="input-field" id="swapAmount" placeholder="0.1" min="0" step="0.001">
+                    <div class="balance-info">Your PHRS balance: <span id="phrsBalance">0</span> PHRS</div>
+                </div>
+                <div class="input-group">
+                    <div class="input-label">PPT You'll Receive</div>
+                    <input type="text" class="input-field" id="pptToReceive" placeholder="0" readonly>
+                </div>
+                <div class="balance-info">Current rate: <span id="currentRateDisplay">0</span> PPT per PHRS</div>
+                <button class="action-button btn-swap" id="swapTokens">SWAP NOW!</button>
+            </div>
+            
+            <!-- Transfer Card -->
+            <div class="card card-3">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>💸</span> Transfer PPT
+                    </div>
+                    <button class="card-add-token add-token-card-btn" data-card="transfer">+ Add PPT</button>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--primary);">Transfer PPT to another address. 1% tax applies (0.5% burn, 0.5% to prize pool).</p>
+                <div class="input-group">
+                    <div class="input-label">Recipient Address</div>
+                    <input type="text" class="input-field" id="transferAddress" placeholder="0x...">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">PPT Amount</div>
+                    <input type="number" class="input-field" id="transferAmount" placeholder="100" min="0" step="1">
+                    <div class="balance-info">Your PPT balance: <span id="pptBalance">0</span> PPT</div>
+                </div>
+                <div class="input-group">
+                    <div class="input-label">Recipient Will Receive</div>
+                    <input type="text" class="input-field" id="transferReceive" placeholder="0" readonly>
+                    <div class="balance-info">Tax: 1% (0.5% burned, 0.5% to prize pool)</div>
+                </div>
+                <div class="balance-info" id="transferChance">Chance to win prize: 0.01%</div>
+                <button class="action-button btn-transfer" id="transferTokens">TRANSFER PPT!</button>
+            </div>
+            
+            <!-- Donate Card -->
+            <div class="card card-4">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🎗️</span> Donate & Support
+                    </div>
+                    <button class="card-add-token add-token-card-btn" data-card="donate">+ Add PPT</button>
+                </div>
+                <p style="margin-bottom: 20px; color: var(--success);">Donate PHRS or PPT to support the project and grow the prize pool!</p>
+                
+                <div class="donate-options">
+                    <button class="donate-option active" data-type="phrs">PHRS</button>
+                    <button class="donate-option" data-type="ppt">PPT</button>
+                </div>
+                
+                <div class="input-group" id="phrsDonateGroup">
+                    <div class="input-label">PHRS Amount to Donate</div>
+                    <input type="number" class="input-field" id="phrsDonateAmount" placeholder="0.01" min="0" step="0.001">
+                    <div class="balance-info">Directly supports the prize pool</div>
+                </div>
+                
+                <div class="input-group" id="pptDonateGroup" style="display: none;">
+                    <div class="input-label">PPT Amount to Donate</div>
+                    <input type="number" class="input-field" id="pptDonateAmount" placeholder="100" min="0" step="1">
+                    <div class="balance-info">1% tax applies (0.5% burned, 0.5% to prize pool)</div>
+                </div>
+                
+                <button class="action-button btn-donate" id="donateTokens">DONATE & SUPPORT!</button>
+            </div>
+        </div>
+        
+        <!-- Prize Pool -->
+        <div class="prize-pool">
+            <div class="prize-title">🎯 DAILY PRIZE POOL 🎯</div>
+            <div class="prize-amount" id="prizeAmount">0 PPT + 0 PHRS</div>
+            <div class="prize-subtitle">Every transfer has 0.01% chance to win 1% of the prize pool!</div>
+            <p>Win big when you transfer tokens! The more activity, the bigger the prize pool grows!</p>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p>Propagate Protocol Token (PPT) - The Meme Token with Purpose!</p>
+            <p>Contract Address (Atlantic Testnet):</p>
+            <div class="contract-address" id="contractAddress">0x1E04197BA40288c603f44E2e51d1E8cfc220f127</div>
+            <p style="margin-top: 20px; font-size: 14px;">Remember: 1% tax on transfers, 0.5% burned forever, 0.5% to prize pool!</p>
+            <p style="margin-top: 10px; font-size: 12px; color: var(--accent);">Network: Atlantic Testnet (Chain ID: 688689)</p>
+        </footer>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+    
+    <script>
+        // 检查ethers是否加载成功
+        if (typeof ethers === 'undefined') {
+            console.error('Ethers.js failed to load, trying alternative CDN...');
+            // 尝试从另一个CDN加载
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/ethers@5.7.0/dist/ethers.umd.min.js';
+            script.onload = function() {
+                console.log('Ethers.js loaded successfully from alternative CDN');
+                initializeApp();
+            };
+            script.onerror = function() {
+                console.error('Failed to load ethers.js from alternative CDN');
+                showNotification('Failed to load required library. Please check your internet connection.', 'error');
+            };
+            document.head.appendChild(script);
+        } else {
+            console.log('Ethers.js loaded successfully');
+            initializeApp();
+        }
+        
+        // 初始化应用
+        function initializeApp() {
+            // Atlantic Testnet Configuration
+            const ATLANTIC_TESTNET = {
+                chainId: '0xA83D41', // 688689 in hex
+                chainIdDecimal: 688689,
+                chainName: 'Atlantic Testnet',
+                nativeCurrency: {
+                    name: 'PHRS',
+                    symbol: 'PHRS',
+                    decimals: 18
+                },
+                rpcUrls: ['https://atlantic.dplabs-internal.com'],
+                blockExplorerUrls: ['https://atlantic.pharosscan.xyz/']
+            };
+            
+            // Contract configuration
+            const CONTRACT_ADDRESS = "0x1E04197BA40288c603f44E2e51d1E8cfc220f127";
+            const CONTRACT_ABI = [
+                "function claim() external",
+                "function swap() external payable",
+                "function transfer(address to, uint256 amount) public returns (bool)",
+                "function transferFrom(address from, address to, uint256 amount) public returns (bool)",
+                "function getStats() external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256)",
+                "function getCurrentRate() public view returns (uint256)",
+                "function balanceOf(address account) external view returns (uint256)",
+                "function allowance(address owner, address spender) external view returns (uint256)",
+                "function approve(address spender, uint256 amount) external returns (bool)",
+                "event Swapped(address indexed user, uint256 pharosIn, uint256 tokensOut)",
+                "event PrizeWon(address indexed winner, uint256 tokenPrize, uint256 pharosPrize)"
+            ];
+            
+            // Global variables
+            let provider, signer, contract, userAddress, userBalance, userPPTBalance;
+            let donateType = "phrs";
+            let isAtlanticNetwork = false;
+            
+            // 初始化事件监听器
+            function setupEventListeners() {
+                // Connect wallet button
+                document.getElementById('connectWallet').addEventListener('click', checkNetworkAndConnect);
+                
+                // Add token button
+                document.getElementById('addTokenBtn').addEventListener('click', addToken);
+                
+                // Card add token buttons
+                document.querySelectorAll('.add-token-card-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        addToken();
+                    });
+                });
+                
+                // Claim airdrop button
+                document.getElementById('claimAirdrop').addEventListener('click', claimAirdrop);
+                
+                // Swap button
+                document.getElementById('swapTokens').addEventListener('click', swapTokens);
+                
+                // Transfer button
+                document.getElementById('transferTokens').addEventListener('click', transferTokens);
+                
+                // Donate button
+                document.getElementById('donateTokens').addEventListener('click', donateTokens);
+                
+                // Donate type buttons
+                document.querySelectorAll('.donate-option').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.donate-option').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        donateType = this.getAttribute('data-type');
+                        updateDonateUI();
+                    });
+                });
+                
+                // Swap amount input - calculate PPT to receive
+                document.getElementById('swapAmount').addEventListener('input', calculateSwap);
+                
+                // Transfer amount input - calculate after tax
+                document.getElementById('transferAmount').addEventListener('input', calculateTransfer);
+                
+                // Contract address click to copy
+                document.getElementById('contractAddress').addEventListener('click', function() {
+                    navigator.clipboard.writeText(CONTRACT_ADDRESS);
+                    showNotification("Contract address copied to clipboard!", "info");
+                });
+            }
+            
+            // 初始化web3 - 现在分离出来，以便在切换网络后重新初始化
+            function initializeWeb3() {
+                try {
+                    if (typeof window.ethereum !== 'undefined') {
+                        // 创建新的provider实例
+                        provider = new ethers.providers.Web3Provider(window.ethereum);
+                        contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+                        
+                        console.log('Web3 initialized successfully');
+                    } else {
+                        showNotification("Please install MetaMask to use this dApp!", "error");
+                        console.error('MetaMask not detected');
+                        return false;
+                    }
+                    return true;
+                } catch (error) {
+                    console.error('Error initializing Web3:', error);
+                    return false;
+                }
+            }
+            
+            // 添加一个函数来重新初始化Web3连接
+            async function reinitializeWeb3() {
+                try {
+                    console.log('Reinitializing Web3 connection...');
+                    
+                    // 清除旧的provider和contract引用
+                    provider = null;
+                    contract = null;
+                    signer = null;
+                    
+                    // 重新初始化
+                    if (initializeWeb3()) {
+                        // 如果已经有用户地址，重新连接
+                        if (userAddress) {
+                            signer = provider.getSigner();
+                            contract = contract.connect(signer);
+                            console.log('Web3 reinitialized and reconnected');
+                            return true;
+                        }
+                        console.log('Web3 reinitialized');
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error('Error reinitializing Web3:', error);
+                    return false;
+                }
+            }
+            
+            // Check network and connect wallet
+            async function checkNetworkAndConnect() {
+                try {
+                    if (!provider) {
+                        if (!initializeWeb3()) {
+                            return;
+                        }
+                    }
+                    
+                    // 获取当前的链ID
+                    let chainId;
+                    try {
+                        // 尝试从provider获取网络信息
+                        const network = await provider.getNetwork();
+                        chainId = network.chainId.toString();
+                        console.log('Current chain ID from provider:', chainId);
+                    } catch (networkError) {
+                        console.log('Error getting network from provider:', networkError);
+                        // 如果provider获取失败，尝试直接从ethereum获取
+                        chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                        console.log('Current chain ID from ethereum:', chainId);
+                    }
+                    
+                    // 检查链ID（十进制和十六进制格式）
+                    const chainIdNum = parseInt(chainId, chainId.startsWith('0x') ? 16 : 10);
+                    
+                    if (chainIdNum === ATLANTIC_TESTNET.chainIdDecimal) {
+                        isAtlanticNetwork = true;
+                        document.getElementById('networkStatus').textContent = "Network: Atlantic Testnet";
+                        
+                        // Connect wallet
+                        await connectWallet();
+                    } else {
+                        isAtlanticNetwork = false;
+                        document.getElementById('networkStatus').textContent = `Network: Wrong Network (ID: ${chainIdNum})`;
+                        
+                        // Show notification to switch network
+                        showNotification("Please switch to Atlantic Testnet (Chain ID: 688689)", "warning");
+                        
+                        // Enable network switch button
+                        const connectBtn = document.getElementById('connectWallet');
+                        connectBtn.innerHTML = '<span>Switch to Atlantic Testnet</span>';
+                        connectBtn.onclick = switchToAtlanticNetwork;
+                    }
+                } catch (error) {
+                    console.error("Error checking network:", error);
+                    showNotification("Error checking network: " + error.message, "error");
+                }
+            }
+            
+            // Switch to Atlantic Testnet
+            async function switchToAtlanticNetwork() {
+                try {
+                    console.log('Attempting to switch to Atlantic Testnet...');
+                    
+                    // 首先尝试使用十进制链ID切换
+                    const hexChainId = `0x${ATLANTIC_TESTNET.chainIdDecimal.toString(16)}`;
+                    
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: hexChainId }],
+                        });
+                        console.log('Successfully switched to Atlantic Testnet');
+                        showNotification("Switched to Atlantic Testnet!", "success");
+                    } catch (switchError) {
+                        console.log('Switch error:', switchError);
+                        
+                        // 如果网络未添加，则添加它
+                        if (switchError.code === 4902) {
+                            try {
+                                await window.ethereum.request({
+                                    method: 'wallet_addEthereumChain',
+                                    params: [{
+                                        chainId: hexChainId,
+                                        chainName: ATLANTIC_TESTNET.chainName,
+                                        nativeCurrency: ATLANTIC_TESTNET.nativeCurrency,
+                                        rpcUrls: ATLANTIC_TESTNET.rpcUrls,
+                                        blockExplorerUrls: ATLANTIC_TESTNET.blockExplorerUrls
+                                    }]
+                                });
+                                console.log('Successfully added Atlantic Testnet');
+                                showNotification("Atlantic Testnet added successfully!", "success");
+                            } catch (addError) {
+                                console.error('Add error:', addError);
+                                
+                                // 检查是否是相同的RPC端点错误
+                                if (addError.message && addError.message.includes('same RPC endpoint')) {
+                                    showNotification("Atlantic Testnet is already in your wallet. Switching...", "info");
+                                    
+                                    // 网络已经存在，等待一下然后手动触发chainChanged事件
+                                    setTimeout(() => {
+                                        window.ethereum.emit('chainChanged', hexChainId);
+                                    }, 1000);
+                                } else {
+                                    throw addError;
+                                }
+                            }
+                        } else {
+                            throw switchError;
+                        }
+                    }
+                    
+                    // 重新初始化Web3连接以避免网络变化错误
+                    await reinitializeWeb3();
+                    
+                    // 等待网络切换完成，然后重新检查
+                    setTimeout(() => {
+                        checkNetworkAndConnect();
+                    }, 1500);
+                    
+                } catch (error) {
+                    console.error("Error switching network:", error);
+                    
+                    if (error.code === 4001) {
+                        showNotification("Network switch rejected by user", "error");
+                    } else {
+                        showNotification("Failed to switch network: " + error.message, "error");
+                    }
+                    
+                    // 重置按钮
+                    const connectBtn = document.getElementById('connectWallet');
+                    connectBtn.innerHTML = '<span>Connect Wallet</span>';
+                    connectBtn.onclick = checkNetworkAndConnect;
+                }
+            }
+            
+            // Connect wallet
+            async function connectWallet() {
+                try {
+                    if (!provider) {
+                        showNotification("Please install MetaMask first!", "error");
+                        return;
+                    }
+                    
+                    // Request account access
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    signer = provider.getSigner();
+                    userAddress = await signer.getAddress();
+                    
+                    // Update contract with signer for transactions
+                    contract = contract.connect(signer);
+                    
+                    // Update UI
+                    updateUI();
+                    showNotification("Wallet connected successfully!", "success");
+                    
+                    // Update balances and stats
+                    await updateBalances();
+                    await updateStats();
+                    
+                } catch (error) {
+                    console.error("Error connecting wallet:", error);
+                    if (error.code === 4001) {
+                        showNotification("Connection rejected by user", "error");
+                    } else {
+                        showNotification("Failed to connect wallet: " + error.message, "error");
+                    }
+                }
+            }
+            
+            // Add PPT token to MetaMask
+            async function addToken() {
+                try {
+                    if (!window.ethereum) {
+                        showNotification("Please install MetaMask first!", "error");
+                        return;
+                    }
+                    
+                    // 检查是否已连接钱包
+                    if (!userAddress) {
+                        showNotification("Please connect your wallet first!", "info");
+                        await connectWallet();
+                        return;
+                    }
+                    
+                    // 检查是否在Atlantic网络
+                    if (!isAtlanticNetwork) {
+                        showNotification("Please switch to Atlantic Testnet first!", "info");
+                        return;
+                    }
+                    
+                    const wasAdded = await window.ethereum.request({
+                        method: 'wallet_watchAsset',
+                        params: {
+                            type: 'ERC20',
+                            options: {
+                                address: CONTRACT_ADDRESS,
+                                symbol: 'PPT',
+                                decimals: 18,
+                                image: 'https://placehold.co/64x64/FF6B9D/FFFFFF?text=PPT'
+                            },
+                        },
+                    });
+                    
+                    if (wasAdded) {
+                        showNotification("PPT token successfully added to your wallet!", "success");
+                    } else {
+                        showNotification("PPT token was not added. You can add it manually.", "info");
+                    }
+                } catch (error) {
+                    console.error("Error adding token:", error);
+                    showNotification("Failed to add token: " + error.message, "error");
+                }
+            }
+            
+            // Update UI with wallet info
+            async function updateUI() {
+                const connectBtn = document.getElementById('connectWallet');
+                const airdropAddressInput = document.getElementById('airdropAddress');
+                
+                if (userAddress) {
+                    // Shorten address for display
+                    const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
+                    
+                    // 更新按钮显示，包含地址和余额
+                    connectBtn.innerHTML = `
+                        <div class="wallet-info">
+                            <span>${shortAddress}</span>
+                            <div class="wallet-balance" id="walletBalanceDisplay">Loading balances...</div>
+                        </div>
+                    `;
+                    
+                    airdropAddressInput.value = userAddress;
+                    
+                    // Check if user has already claimed airdrop
+                    checkAirdropStatus();
+                    
+                    // 更新钱包余额显示
+                    updateWalletBalanceDisplay();
+                } else {
+                    connectBtn.innerHTML = '<span>Connect Wallet</span>';
+                    connectBtn.onclick = checkNetworkAndConnect;
+                    airdropAddressInput.value = "";
+                    document.getElementById('airdropStatus').textContent = "Status: Connect wallet to check";
+                }
+            }
+            
+            // 更新钱包余额显示在按钮上
+            async function updateWalletBalanceDisplay() {
+                try {
+                    if (!provider || !userAddress) return;
+                    
+                    // 获取PHRS余额
+                    const phrsBalance = await provider.getBalance(userAddress);
+                    const phrsBalanceFormatted = ethers.utils.formatEther(phrsBalance);
+                    
+                    // 获取PPT余额
+                    let pptBalanceFormatted = "0";
+                    try {
+                        const pptBalance = await contract.balanceOf(userAddress);
+                        pptBalanceFormatted = ethers.utils.formatEther(pptBalance);
+                    } catch (error) {
+                        console.error("Error getting PPT balance:", error);
+                    }
+                    
+                    // 格式化显示
+                    const displayText = `PHRS: ${parseFloat(phrsBalanceFormatted).toFixed(2)} | PPT: ${parseFloat(pptBalanceFormatted).toFixed(2)}`;
+                    
+                    const walletBalanceDisplay = document.getElementById('walletBalanceDisplay');
+                    if (walletBalanceDisplay) {
+                        walletBalanceDisplay.textContent = displayText;
+                    }
+                    
+                } catch (error) {
+                    console.error("Error updating wallet balance display:", error);
+                    const walletBalanceDisplay = document.getElementById('walletBalanceDisplay');
+                    if (walletBalanceDisplay) {
+                        walletBalanceDisplay.textContent = "Error loading balances";
+                    }
+                }
+            }
+            
+            // Update user balances
+            async function updateBalances() {
+                try {
+                    if (!provider || !userAddress) return;
+                    
+                    // Get PHRS balance
+                    userBalance = await provider.getBalance(userAddress);
+                    const phrsBalanceFormatted = ethers.utils.formatEther(userBalance);
+                    document.getElementById('phrsBalance').textContent = parseFloat(phrsBalanceFormatted).toFixed(4);
+                    
+                    // Get PPT balance
+                    userPPTBalance = await contract.balanceOf(userAddress);
+                    const pptBalanceFormatted = ethers.utils.formatEther(userPPTBalance);
+                    document.getElementById('pptBalance').textContent = formatNumber(pptBalanceFormatted);
+                    
+                    // 同时更新钱包按钮上的余额显示
+                    updateWalletBalanceDisplay();
+                    
+                } catch (error) {
+                    console.error("Error updating balances:", error);
+                }
+            }
+            
+            // Update stats from contract
+            async function updateStats() {
+                try {
+                    if (!contract) return;
+                    
+                    const stats = await contract.getStats();
+                    
+                    // Format numbers
+                    document.getElementById('totalSupply').textContent = formatNumber(ethers.utils.formatEther(stats[0]));
+                    document.getElementById('airdropped').textContent = formatNumber(ethers.utils.formatEther(stats[1]));
+                    document.getElementById('swapped').textContent = formatNumber(ethers.utils.formatEther(stats[2]));
+                    document.getElementById('tokenPrizePool').textContent = formatNumber(ethers.utils.formatEther(stats[3]));
+                    document.getElementById('totalBurned').textContent = formatNumber(ethers.utils.formatEther(stats[4]));
+                    
+                    // Get current rate
+                    const currentRate = await contract.getCurrentRate();
+                    document.getElementById('currentRate').textContent = formatNumber(currentRate.toString());
+                    document.getElementById('currentRateDisplay').textContent = formatNumber(currentRate.toString());
+                    
+                    // Update contract balance
+                    const contractBalance = ethers.utils.formatEther(stats[6]);
+                    document.getElementById('contractBalance').textContent = parseFloat(contractBalance).toFixed(2) + " PHRS";
+                    
+                    // Update prize pool display
+                    document.getElementById('prizeAmount').textContent = 
+                        `${formatNumber(ethers.utils.formatEther(stats[3]))} PPT + ${parseFloat(contractBalance).toFixed(2)} PHRS`;
+                    
+                } catch (error) {
+                    console.error("Error updating stats:", error);
+                    // Try to get individual stats if getStats fails
+                    updateStatsIndividually();
+                }
+            }
+            
+            // Fallback for getting stats individually
+            async function updateStatsIndividually() {
+                try {
+                    // Get total supply (from constant)
+                    document.getElementById('totalSupply').textContent = "1T";
+                    
+                    // Get current rate
+                    const currentRate = await contract.getCurrentRate();
+                    document.getElementById('currentRate').textContent = formatNumber(currentRate.toString());
+                    document.getElementById('currentRateDisplay').textContent = formatNumber(currentRate.toString());
+                    
+                } catch (error) {
+                    console.error("Error updating individual stats:", error);
+                }
+            }
+            
+            // Check airdrop status
+            async function checkAirdropStatus() {
+                try {
+                    if (!contract || !userAddress) return;
+                    
+                    try {
+                        const pptBalance = await contract.balanceOf(userAddress);
+                        const claimAmount = ethers.utils.parseEther("100");
+                        
+                        if (pptBalance.gte(claimAmount)) {
+                            document.getElementById('airdropStatus').textContent = "Status: Already claimed";
+                            document.getElementById('claimAirdrop').disabled = true;
+                        } else {
+                            document.getElementById('airdropStatus').textContent = "Status: Eligible to claim";
+                            document.getElementById('claimAirdrop').disabled = false;
+                        }
+                    } catch (error) {
+                        console.log("Could not check airdrop status, assuming eligible");
+                        document.getElementById('airdropStatus').textContent = "Status: Eligible to claim";
+                        document.getElementById('claimAirdrop').disabled = false;
+                    }
+                    
+                } catch (error) {
+                    console.error("Error checking airdrop status:", error);
+                    document.getElementById('airdropStatus').textContent = "Status: Error checking";
+                }
+            }
+            
+            // Claim airdrop
+            async function claimAirdrop() {
+                try {
+                    if (!userAddress) {
+                        showNotification("Please connect your wallet first!", "error");
+                        return;
+                    }
+                    
+                    if (!isAtlanticNetwork) {
+                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                        return;
+                    }
+                    
+                    // Check gas estimate
+                    const gasEstimate = await contract.estimateGas.claim();
+                    const gasPrice = await provider.getGasPrice();
+                    const gasCost = gasEstimate.mul(gasPrice);
+                    
+                    if (userBalance.lt(gasCost)) {
+                        showNotification(`Insufficient PHRS for gas. Need at least ${ethers.utils.formatEther(gasCost)} PHRS`, "error");
+                        return;
+                    }
+                    
+                    showNotification("Claiming airdrop...", "info");
+                    setButtonLoading('claimAirdrop', true);
+                    
+                    // Call contract claim function
+                    const tx = await contract.claim();
+                    await tx.wait();
+                    
+                    showNotification("Successfully claimed 100 PPT airdrop!", "success");
+                    updateStats();
+                    updateBalances();
+                    checkAirdropStatus();
+                    
+                } catch (error) {
+                    console.error("Error claiming airdrop:", error);
+                    
+                    if (error.code === 4001) {
+                        showNotification("Transaction rejected by user", "error");
+                    } else if (error.message.includes("Already claimed")) {
+                        showNotification("You have already claimed the airdrop!", "error");
+                        document.getElementById('airdropStatus').textContent = "Status: Already claimed";
+                        document.getElementById('claimAirdrop').disabled = true;
+                    } else if (error.message.includes("Airdrop exhausted")) {
+                        showNotification("Airdrop pool is exhausted", "error");
+                    } else {
+                        showNotification("Failed to claim airdrop: " + error.message, "error");
+                    }
+                } finally {
+                    setButtonLoading('claimAirdrop', false);
+                }
+            }
+            
+            // Swap PHRS for PPT
+            async function swapTokens() {
+                try {
+                    if (!userAddress) {
+                        showNotification("Please connect your wallet first!", "error");
+                        return;
+                    }
+                    
+                    if (!isAtlanticNetwork) {
+                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                        return;
+                    }
+                    
+                    const amountInput = document.getElementById('swapAmount').value;
+                    if (!amountInput || parseFloat(amountInput) <= 0) {
+                        showNotification("Please enter a valid amount!", "error");
+                        return;
+                    }
+                    
+                    // Convert to wei
+                    const amountWei = ethers.utils.parseEther(amountInput);
+                    
+                    // Check if user has enough balance
+                    if (userBalance.lt(amountWei)) {
+                        showNotification(`Insufficient PHRS balance. You have ${ethers.utils.formatEther(userBalance)} PHRS`, "error");
+                        return;
+                    }
+                    
+                    // Check minimum amount (gas price * 21000)
+                    const gasPrice = await provider.getGasPrice();
+                    const minAmount = gasPrice.mul(21000);
+                    
+                    if (amountWei.lt(minAmount)) {
+                        showNotification(`Minimum amount required: ${ethers.utils.formatEther(minAmount)} PHRS`, "error");
+                        return;
+                    }
+                    
+                    showNotification(`Swapping ${amountInput} PHRS for PPT...`, "info");
+                    setButtonLoading('swapTokens', true);
+                    
+                    // Call contract swap function with value
+                    const tx = await contract.swap({ value: amountWei });
+                    await tx.wait();
+                    
+                    showNotification("Swap successful! You received PPT tokens.", "success");
+                    updateStats();
+                    updateBalances();
+                    
+                    // Clear input
+                    document.getElementById('swapAmount').value = "";
+                    document.getElementById('pptToReceive').value = "";
+                    
+                } catch (error) {
+                    console.error("Error swapping tokens:", error);
+                    
+                    if (error.code === 4001) {
+                        showNotification("Transaction rejected by user", "error");
+                    } else if (error.message.includes("Insufficient gas payment")) {
+                        showNotification("Insufficient gas payment. Increase the amount.", "error");
+                    } else if (error.message.includes("Swap pool exhausted")) {
+                        showNotification("Swap pool is exhausted", "error");
+                    } else {
+                        showNotification("Failed to swap: " + error.message, "error");
+                    }
+                } finally {
+                    setButtonLoading('swapTokens', false);
+                }
+            }
+            
+            // Transfer PPT tokens
+            async function transferTokens() {
+                try {
+                    if (!userAddress) {
+                        showNotification("Please connect your wallet first!", "error");
+                        return;
+                    }
+                    
+                    if (!isAtlanticNetwork) {
+                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                        return;
+                    }
+                    
+                    const recipient = document.getElementById('transferAddress').value.trim();
+                    const amount = document.getElementById('transferAmount').value;
+                    
+                    if (!recipient) {
+                        showNotification("Please enter a recipient address!", "error");
+                        return;
+                    }
+                    
+                    if (!ethers.utils.isAddress(recipient)) {
+                        showNotification("Please enter a valid recipient address!", "error");
+                        return;
+                    }
+                    
+                    if (!amount || parseFloat(amount) <= 0) {
+                        showNotification("Please enter a valid amount!", "error");
+                        return;
+                    }
+                    
+                    // Convert to wei (assuming 18 decimals)
+                    const amountWei = ethers.utils.parseEther(amount);
+                    
+                    // Check if user has enough PPT balance
+                    if (userPPTBalance.lt(amountWei)) {
+                        showNotification(`Insufficient PPT balance. You have ${ethers.utils.formatEther(userPPTBalance)} PPT`, "error");
+                        return;
+                    }
+                    
+                    // Check gas estimate
+                    const gasEstimate = await contract.estimateGas.transfer(recipient, amountWei);
+                    const gasPrice = await provider.getGasPrice();
+                    const gasCost = gasEstimate.mul(gasPrice);
+                    
+                    if (userBalance.lt(gasCost)) {
+                        showNotification(`Insufficient PHRS for gas. Need at least ${ethers.utils.formatEther(gasCost)} PHRS`, "error");
+                        return;
+                    }
+                    
+                    showNotification(`Transferring ${amount} PPT...`, "info");
+                    setButtonLoading('transferTokens', true);
+                    
+                    // Call contract transfer function
+                    const tx = await contract.transfer(recipient, amountWei);
+                    await tx.wait();
+                    
+                    showNotification("Transfer successful! 1% tax applied (0.5% burned, 0.5% to prize pool).", "success");
+                    updateStats();
+                    updateBalances();
+                    
+                    // Clear inputs
+                    document.getElementById('transferAddress').value = "";
+                    document.getElementById('transferAmount').value = "";
+                    document.getElementById('transferReceive').value = "";
+                    
+                } catch (error) {
+                    console.error("Error transferring tokens:", error);
+                    
+                    if (error.code === 4001) {
+                        showNotification("Transaction rejected by user", "error");
+                    } else {
+                        showNotification("Failed to transfer: " + error.message, "error");
+                    }
+                } finally {
+                    setButtonLoading('transferTokens', false);
+                }
+            }
+            
+            // Donate tokens
+            async function donateTokens() {
+                try {
+                    if (!userAddress) {
+                        showNotification("Please connect your wallet first!", "error");
+                        return;
+                    }
+                    
+                    if (!isAtlanticNetwork) {
+                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                        return;
+                    }
+                    
+                    if (donateType === "phrs") {
+                        // Donate PHRS
+                        const amountInput = document.getElementById('phrsDonateAmount').value;
+                        
+                        if (!amountInput || parseFloat(amountInput) <= 0) {
+                            showNotification("Please enter a valid amount!", "error");
+                            return;
+                        }
+                        
+                        // Convert to wei
+                        const amountWei = ethers.utils.parseEther(amountInput);
+                        
+                        // Check if user has enough balance
+                        if (userBalance.lt(amountWei)) {
+                            showNotification(`Insufficient PHRS balance. You have ${ethers.utils.formatEther(userBalance)} PHRS`, "error");
+                            return;
+                        }
+                        
+                        showNotification(`Donating ${amountInput} PHRS...`, "info");
+                        setButtonLoading('donateTokens', true);
+                        
+                        // Send PHRS directly to contract (no function call, just value)
+                        const tx = await signer.sendTransaction({
+                            to: CONTRACT_ADDRESS,
+                            value: amountWei
+                        });
+                        
+                        await tx.wait();
+                        
+                        showNotification("Donation successful! Thank you for supporting the prize pool!", "success");
+                        
+                        // Clear input
+                        document.getElementById('phrsDonateAmount').value = "";
+                        
+                    } else {
+                        // Donate PPT - this is just a transfer to contract address
+                        const amountInput = document.getElementById('pptDonateAmount').value;
+                        const recipient = CONTRACT_ADDRESS;
+                        
+                        if (!amountInput || parseFloat(amountInput) <= 0) {
+                            showNotification("Please enter a valid amount!", "error");
+                            return;
+                        }
+                        
+                        // Convert to wei (assuming 18 decimals)
+                        const amountWei = ethers.utils.parseEther(amountInput);
+                        
+                        // Check if user has enough PPT balance
+                        if (userPPTBalance.lt(amountWei)) {
+                            showNotification(`Insufficient PPT balance. You have ${ethers.utils.formatEther(userPPTBalance)} PPT`, "error");
+                            return;
+                        }
+                        
+                        // Check gas estimate
+                        const gasEstimate = await contract.estimateGas.transfer(recipient, amountWei);
+                        const gasPrice = await provider.getGasPrice();
+                        const gasCost = gasEstimate.mul(gasPrice);
+                        
+                        if (userBalance.lt(gasCost)) {
+                            showNotification(`Insufficient PHRS for gas. Need at least ${ethers.utils.formatEther(gasCost)} PHRS`, "error");
+                            return;
+                        }
+                        
+                        showNotification(`Donating ${amountInput} PPT...`, "info");
+                        setButtonLoading('donateTokens', true);
+                        
+                        // Call contract transfer function to contract address
+                        const tx = await contract.transfer(recipient, amountWei);
+                        await tx.wait();
+                        
+                        showNotification("Donation successful! 1% tax applied (0.5% burned, 0.5% to prize pool).", "success");
+                        
+                        // Clear input
+                        document.getElementById('pptDonateAmount').value = "";
+                    }
+                    
+                    updateStats();
+                    updateBalances();
+                    
+                } catch (error) {
+                    console.error("Error donating:", error);
+                    
+                    if (error.code === 4001) {
+                        showNotification("Transaction rejected by user", "error");
+                    } else {
+                        showNotification("Failed to donate: " + error.message, "error");
+                    }
+                } finally {
+                    setButtonLoading('donateTokens', false);
+                }
+            }
+            
+            // Calculate PPT to receive from swap
+            async function calculateSwap() {
+                const amount = document.getElementById('swapAmount').value;
+                if (!amount || parseFloat(amount) <= 0) {
+                    document.getElementById('pptToReceive').value = "";
+                    return;
+                }
+                
+                try {
+                    // Get current rate from contract
+                    const rate = await contract.getCurrentRate();
+                    const pptAmount = parseFloat(amount) * parseFloat(rate.toString());
+                    document.getElementById('pptToReceive').value = pptAmount.toFixed(2);
+                } catch (error) {
+                    // If contract call fails, use default rate
+                    const defaultRate = 10000;
+                    const pptAmount = parseFloat(amount) * defaultRate;
+                    document.getElementById('pptToReceive').value = pptAmount.toFixed(2);
+                }
+            }
+            
+            // Calculate transfer after tax
+            function calculateTransfer() {
+                const amount = document.getElementById('transferAmount').value;
+                if (!amount || parseFloat(amount) <= 0) {
+                    document.getElementById('transferReceive').value = "";
+                    return;
+                }
+                
+                // 1% tax
+                const tax = parseFloat(amount) * 0.01;
+                const received = parseFloat(amount) - tax;
+                document.getElementById('transferReceive').value = received.toFixed(2);
+            }
+            
+            // Update donate UI based on selected type
+            function updateDonateUI() {
+                if (donateType === "phrs") {
+                    document.getElementById('phrsDonateGroup').style.display = 'block';
+                    document.getElementById('pptDonateGroup').style.display = 'none';
+                } else {
+                    document.getElementById('phrsDonateGroup').style.display = 'none';
+                    document.getElementById('pptDonateGroup').style.display = 'block';
+                }
+            }
+            
+            // Show notification
+            function showNotification(message, type = "info") {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification notification-${type}`;
+                notification.style.display = 'block';
+                
+                // Auto hide after 5 seconds
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Set button loading state
+            function setButtonLoading(buttonId, isLoading) {
+                const button = document.getElementById(buttonId);
+                if (isLoading) {
+                    button.classList.add('loading');
+                    button.disabled = true;
+                } else {
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                }
+            }
+            
+            // Format large numbers
+            function formatNumber(numStr) {
+                const num = parseFloat(numStr);
+                if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+                if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+                if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+                if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+                return num.toFixed(2);
+            }
+            
+            // 初始化应用
+            function init() {
+                // 先初始化Web3
+                if (initializeWeb3()) {
+                    setupEventListeners();
+                    updateDonateUI();
+                    
+                    // 监听chainChanged事件
+                    if (window.ethereum) {
+                        window.ethereum.on('chainChanged', async (chainId) => {
+                            console.log('Chain changed event:', chainId);
+                            // 重新初始化Web3连接
+                            await reinitializeWeb3();
+                            // 重新检查网络和连接
+                            setTimeout(checkNetworkAndConnect, 500);
+                        });
+                    }
+                    
+                    // If MetaMask is already connected
+                    if (window.ethereum && window.ethereum.selectedAddress) {
+                        setTimeout(checkNetworkAndConnect, 500);
+                    }
+                    
+                    // Auto-refresh stats every 30 seconds
+                    setInterval(() => {
+                        if (userAddress && isAtlanticNetwork) {
+                            updateStats();
+                            updateBalances();
+                        }
+                    }, 30000);
+                    
+                    console.log('PPT DApp initialized successfully');
+                }
+            }
+            
+            // 启动应用
+            init();
+        }
+    </script>
+</body>
+</html>
