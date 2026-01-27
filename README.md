@@ -1,2 +1,16 @@
-# Propagate-Protocol
-🇨🇳 Propagate Protocol | 传播协议 🇺🇸 Propagate Protocol | Viral Spread Token Protocol  ✨ 核心特性 / Key Features: • 零 Gas 空投 / Zero-Gas Airdrop • 动态兑换率 / Dynamic Swap Rate • 双重奖池抽奖 / Dual Prize Pool Lottery • 自动通缩销毁 / Auto-Deflation &amp; Burn • 完全去中心化 / Fully Decentralized 
+# Propagate Protocol 🚀
+
+Viral ERC-20 token with built-in lottery mechanics.
+
+## ✨ Features
+- Zero-gas airdrop (100 tokens per address)
+- Dynamic swap rate (1 native = 10k tokens initially)
+- 0.01% tax on transfers (50% burn + 50% prize pool)
+- 0.01% chance to win 1% of both token & native prize pools
+- Auto-deflationary tokenomics
+
+## 📊 Distribution
+- 11% - Deployer
+- 49% - Airdrop pool
+- 40% - Swap pool
+- Total: 1 trillion tokens
