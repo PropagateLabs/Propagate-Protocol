@@ -3,7 +3,7 @@
 Viral ERC-20 token with built-in lottery mechanics.
 
 ## ✨ Features
-- Zero-gas airdrop (100 tokens per address)
+- Free airdrop (100 tokens per address)
 - Dynamic swap rate (1 native = 10k tokens initially)
 - 0.01% tax on transfers (50% burn + 50% prize pool)
 - 0.01% chance to win 1% of both token & native prize pools
