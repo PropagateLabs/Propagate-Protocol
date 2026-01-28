@@ -571,6 +571,16 @@
             font-size: 12px;
             color: var(--secondary);
         }
+        
+        /* Tax Info */
+        .tax-info {
+            background: rgba(255, 107, 157, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -603,7 +613,7 @@
             <div class="top-prize-subtitle">Every transfer has 0.01% chance to win 1% of the prize pool!</div>
             <div class="top-prize-description">
                 Win big when you transfer tokens! The more activity, the bigger the prize pool grows! 
-                Every transaction contributes to the prize pool - 0.5% of each transfer tax goes directly to the prize pool!
+                Every transaction contributes to the prize pool - 0.005% of each transfer tax goes directly to the prize pool!
             </div>
         </div>
         
@@ -641,7 +651,7 @@
                     </div>
                     <button class="card-add-token add-token-card-btn" data-card="transfer">+ Add PPT</button>
                 </div>
-                <p style="margin-bottom: 20px; color: var(--primary);">Transfer PPT to another address. 1% tax applies (0.5% burn, 0.5% to prize pool).</p>
+                <p style="margin-bottom: 20px; color: var(--primary);">Transfer PPT to another address. 0.01% tax applies (0.005% burn, 0.005% to prize pool).</p>
                 <div class="input-group">
                     <div class="input-label">Recipient Address</div>
                     <input type="text" class="input-field" id="transferAddress" placeholder="0x...">
@@ -654,7 +664,7 @@
                 <div class="input-group">
                     <div class="input-label">Recipient Will Receive</div>
                     <input type="text" class="input-field" id="transferReceive" placeholder="0" readonly>
-                    <div class="balance-info">Tax: 1% (0.5% burned, 0.5% to prize pool)</div>
+                    <div class="tax-info">Tax: 0.01% (0.005% burned, 0.005% to prize pool)</div>
                 </div>
                 <div class="balance-info" id="transferChance">Chance to win prize: 0.01%</div>
                 <button class="action-button btn-transfer" id="transferTokens">TRANSFER PPT!</button>
@@ -684,7 +694,7 @@
                 <div class="input-group" id="pptDonateGroup" style="display: none;">
                     <div class="input-label">PPT Amount to Donate</div>
                     <input type="number" class="input-field" id="pptDonateAmount" placeholder="1000" min="0" step="100" value="1000">
-                    <div class="balance-info">1% tax applies (0.5% burned, 0.5% to prize pool)</div>
+                    <div class="tax-info">0.01% tax applies (0.005% burned, 0.005% to prize pool)</div>
                 </div>
                 
                 <button class="action-button btn-donate" id="donateTokens">DONATE & SUPPORT!</button>
@@ -717,14 +727,18 @@
                 <div class="stat-value" id="contractBalance">0 MON</div>
                 <div class="stat-label">Contract Balance</div>
             </div>
+            <div class="stat-item">
+                <div class="stat-value">0.01%</div>
+                <div class="stat-label">Transfer Tax</div>
+            </div>
         </div>
         
         <!-- Footer -->
         <footer>
             <p>Propagate Protocol Token (PPT) - The Meme Token with Purpose!</p>
             <p>Contract Address (Monad Testnet):</p>
-            <div class="contract-address" id="contractAddress">0xE98bAF13bA17A768E009b557B96fbB3dd4f7824a</div>
-            <p style="margin-top: 20px; font-size: 14px;">Remember: 1% tax on transfers, 0.5% burned forever, 0.5% to prize pool!</p>
+            <div class="contract-address" id="contractAddress">0x3b0CAf863A69a6F258B64C0F2c7937aE8cCd9997</div>
+            <p style="margin-top: 20px; font-size: 14px;">Remember: 0.01% tax on transfers, 0.005% burned forever, 0.005% to prize pool!</p>
             <p style="margin-top: 10px; font-size: 12px; color: var(--accent);">Network: Monad Testnet (Chain ID: 10143)</p>
         </footer>
     </div>
@@ -769,7 +783,7 @@
             };
             
             // Contract configuration - 更新为新的合约地址
-            const CONTRACT_ADDRESS = "0xE98bAF13bA17A768E009b557B96fbB3dd4f7824a";
+            const CONTRACT_ADDRESS = "0x3b0CAf863A69a6F258B64C0F2c7937aE8cCd9997";
             const CONTRACT_ABI = [
                 "function swap() external payable",
                 "function transfer(address to, uint256 amount) public returns (bool)",
@@ -778,6 +792,9 @@
                 "function getCurrentRate() public pure returns (uint256)",
                 "function getRemainingSwapPool() public view returns (uint256)",
                 "function getPrizeInfo() external view returns (uint256 prizePoolPPT, uint256 prizePoolMON, uint256 chancePercent, uint256 timeSinceLastPrize)",
+                "function getTaxInfo() external pure returns (uint256 taxRate, uint256 burnRate, uint256 prizePoolRate, uint256 taxDenominator)",
+                "function batchTransfer(address[] calldata recipients, uint256[] calldata amounts) external returns (bool)",
+                "function donateMon() external payable",
                 "function balanceOf(address account) external view returns (uint256)",
                 "function allowance(address owner, address spender) external view returns (uint256)",
                 "function approve(address spender, uint256 amount) external returns (bool)",
@@ -795,6 +812,9 @@
             
             // 固定兑换率：1 MON = 10,000 PPT
             const FIXED_RATE = 10000;
+            
+            // 税费率：0.01% (从1%降低)
+            const TAX_RATE = 0.0001; // 0.01%
             
             // 初始化事件监听器
             function setupEventListeners() {
@@ -859,12 +879,12 @@
                 }
             }
             
-            // 估算Gas费用
+            // 估算Gas费用 - 仅用于显示，不用于设置交易参数
             async function estimateGasForSwap(amountWei) {
                 try {
-                    if (!contract || !userAddress) return "0";
+                    if (!contract || !userAddress) return null;
                     
-                    // 估算gas
+                    // 估算gas，仅用于显示给用户参考
                     const gasEstimate = await contract.estimateGas.swap({ value: amountWei });
                     const gasPrice = await provider.getGasPrice();
                     
@@ -1167,7 +1187,7 @@
                 document.getElementById('topPrizeAmount').textContent = "Prize Pool Loading...";
             }
             
-            // Swap MON for PPT - 完整版本，使用真实链上数据
+            // Swap MON for PPT - 让MetaMask完全控制燃料费
             async function swapTokens() {
                 try {
                     if (!userAddress) {
@@ -1209,34 +1229,15 @@
                         // 继续执行，合约会检查
                     }
                     
-                    // 估算gas费用
-                    showNotification("Estimating gas fees...", "info");
-                    let gasEstimate;
-                    try {
-                        gasEstimate = await contract.estimateGas.swap({ value: amountWei });
-                    } catch (estimateError) {
-                        console.error("Gas estimation error:", estimateError);
-                        // 如果gas估算失败，使用默认值
-                        gasEstimate = ethers.BigNumber.from("120000");
-                    }
-                    
-                    const gasPrice = await provider.getGasPrice();
-                    const gasCost = gasEstimate.mul(gasPrice);
-                    
-                    // 检查余额是否足够支付swap金额+gas费用
-                    const totalRequired = amountWei.add(gasCost);
-                    if (userBalance.lt(totalRequired)) {
-                        showNotification(`Insufficient MON for swap + gas. You need ${ethers.utils.formatEther(totalRequired)} MON (Swap: ${amountInput} + Gas: ${ethers.utils.formatEther(gasCost)})`, "error");
-                        return;
-                    }
-                    
+                    // 不再估算gas费用，让MetaMask处理
                     showNotification(`Swapping ${amountInput} MON for ${(parseFloat(amountInput) * FIXED_RATE).toLocaleString()} PPT...`, "info");
                     setButtonLoading('swapTokens', true);
                     
-                    // 发送交易 - 使用正确的gas限额
+                    // 发送交易 - 不设置任何gas参数，让MetaMask完全控制
                     const tx = await contract.swap({ 
-                        value: amountWei,
-                        gasLimit: gasEstimate.mul(12).div(10) // 增加20%的gas限额
+                        value: amountWei
+                        // 不设置gasLimit、gasPrice、maxFeePerGas、maxPriorityFeePerGas
+                        // 让MetaMask使用其默认的低级型费用
                     });
                     
                     showNotification("Transaction submitted! Waiting for confirmation...", "info");
@@ -1245,20 +1246,42 @@
                     // 检查事件
                     let eventFound = false;
                     let tokensReceived = "0";
-                    if (receipt.events) {
-                        for (const event of receipt.events) {
-                            if (event.event === 'Swapped') {
-                                eventFound = true;
-                                tokensReceived = ethers.utils.formatEther(event.args.pptAmount);
-                                break;
+                    let monSent = "0";
+                    
+                    if (receipt.logs) {
+                        for (const log of receipt.logs) {
+                            try {
+                                const parsedLog = contract.interface.parseLog(log);
+                                if (parsedLog.name === 'Swapped') {
+                                    eventFound = true;
+                                    monSent = ethers.utils.formatEther(parsedLog.args.monAmount);
+                                    tokensReceived = ethers.utils.formatEther(parsedLog.args.pptAmount);
+                                    break;
+                                }
+                            } catch (e) {
+                                // 不是我们合约的事件
                             }
                         }
                     }
                     
                     if (eventFound) {
-                        showNotification(`Swap successful! You received ${parseFloat(tokensReceived).toLocaleString()} PPT tokens.`, "success");
+                        showNotification(`Swap successful! You received ${parseFloat(tokensReceived).toLocaleString()} PPT for ${monSent} MON.`, "success");
                     } else {
-                        showNotification("Swap completed. Please check your wallet balance.", "warning");
+                        // 检查Transfer事件作为备选
+                        for (const log of receipt.logs) {
+                            try {
+                                const parsedLog = contract.interface.parseLog(log);
+                                if (parsedLog.name === 'Transfer' && 
+                                    parsedLog.args.from === CONTRACT_ADDRESS && 
+                                    parsedLog.args.to === userAddress) {
+                                    tokensReceived = ethers.utils.formatEther(parsedLog.args.value);
+                                    break;
+                                }
+                            } catch (e) {
+                                // 不是Transfer事件
+                            }
+                        }
+                        showNotification(`Swap completed! You received ${parseFloat(tokensReceived).toLocaleString()} PPT.`, "success");
                     }
                     
                     // 更新统计和余额
@@ -1276,7 +1299,7 @@
                     if (error.code === 4001) {
                         showNotification("Transaction rejected by user", "error");
                     } else if (error.message.includes("Insufficient gas payment")) {
-                        showNotification("Insufficient gas payment. Increase the amount.", "error");
+                        showNotification("Insufficient gas payment. Please try again.", "error");
                     } else if (error.message.includes("Swap pool exhausted")) {
                         showNotification("Swap pool is exhausted", "error");
                     } else if (error.message.includes("Minimum swap is 0.001 MON")) {
@@ -1289,6 +1312,8 @@
                         showNotification("Transaction reverted. Please check if amount is sufficient.", "error");
                     } else if (error.message.includes("insufficient funds")) {
                         showNotification("Insufficient funds for swap", "error");
+                    } else if (error.message.includes("gas")) {
+                        showNotification("Transaction failed due to gas issues. Please try again with MetaMask's recommended gas settings.", "error");
                     } else {
                         showNotification("Failed to swap: " + error.message, "error");
                     }
@@ -1297,7 +1322,7 @@
                 }
             }
             
-            // Transfer PPT tokens
+            // Transfer PPT tokens - 让MetaMask完全控制燃料费
             async function transferTokens() {
                 try {
                     if (!userAddress) {
@@ -1335,22 +1360,14 @@
                         return;
                     }
                     
-                    const gasEstimate = await contract.estimateGas.transfer(recipient, amountWei);
-                    const gasPrice = await provider.getGasPrice();
-                    const gasCost = gasEstimate.mul(gasPrice);
-                    
-                    if (userBalance.lt(gasCost)) {
-                        showNotification(`Insufficient MON for gas. Need at least ${ethers.utils.formatEther(gasCost)} MON`, "error");
-                        return;
-                    }
-                    
                     showNotification(`Transferring ${amount} PPT...`, "info");
                     setButtonLoading('transferTokens', true);
                     
+                    // 发送交易 - 不设置任何gas参数，让MetaMask完全控制
                     const tx = await contract.transfer(recipient, amountWei);
                     await tx.wait();
                     
-                    showNotification("Transfer successful! 1% tax applied (0.5% burned, 0.5% to prize pool).", "success");
+                    showNotification("Transfer successful! 0.01% tax applied (0.005% burned, 0.005% to prize pool).", "success");
                     updateStats();
                     updateBalances();
                     
@@ -1363,6 +1380,8 @@
                     
                     if (error.code === 4001) {
                         showNotification("Transaction rejected by user", "error");
+                    } else if (error.message.includes("gas")) {
+                        showNotification("Transaction failed due to gas issues. Please try again with MetaMask's recommended gas settings.", "error");
                     } else {
                         showNotification("Failed to transfer: " + error.message, "error");
                     }
@@ -1371,7 +1390,7 @@
                 }
             }
             
-            // Donate tokens
+            // Donate tokens - 让MetaMask完全控制燃料费
             async function donateTokens() {
                 try {
                     if (!userAddress) {
@@ -1403,7 +1422,10 @@
                         setButtonLoading('donateTokens', true);
                         
                         // 使用合约的donateMon函数
-                        const tx = await contract.donateMon({ value: amountWei });
+                        const tx = await contract.donateMon({ 
+                            value: amountWei
+                            // 不设置gas参数，让MetaMask控制
+                        });
                         
                         await tx.wait();
                         
@@ -1427,22 +1449,13 @@
                             return;
                         }
                         
-                        const gasEstimate = await contract.estimateGas.transfer(recipient, amountWei);
-                        const gasPrice = await provider.getGasPrice();
-                        const gasCost = gasEstimate.mul(gasPrice);
-                        
-                        if (userBalance.lt(gasCost)) {
-                            showNotification(`Insufficient MON for gas. Need at least ${ethers.utils.formatEther(gasCost)} MON`, "error");
-                            return;
-                        }
-                        
                         showNotification(`Donating ${amountInput} PPT...`, "info");
                         setButtonLoading('donateTokens', true);
                         
                         const tx = await contract.transfer(recipient, amountWei);
                         await tx.wait();
                         
-                        showNotification("Donation successful! 1% tax applied (0.5% burned, 0.5% to prize pool).", "success");
+                        showNotification("Donation successful! 0.01% tax applied (0.005% burned, 0.005% to prize pool).", "success");
                         
                         document.getElementById('pptDonateAmount').value = "";
                     }
@@ -1455,6 +1468,8 @@
                     
                     if (error.code === 4001) {
                         showNotification("Transaction rejected by user", "error");
+                    } else if (error.message.includes("gas")) {
+                        showNotification("Transaction failed due to gas issues. Please try again with MetaMask's recommended gas settings.", "error");
                     } else {
                         showNotification("Failed to donate: " + error.message, "error");
                     }
@@ -1463,7 +1478,7 @@
                 }
             }
             
-            // Calculate PPT to receive from swap - 完整版本
+            // Calculate PPT to receive from swap
             async function calculateSwap() {
                 const amount = document.getElementById('swapAmount').value;
                 if (!amount || parseFloat(amount) <= 0) {
@@ -1497,12 +1512,12 @@
                         console.error("Error checking swap pool:", error);
                     }
                     
-                    // 估算gas费用
+                    // 估算gas费用仅用于显示
                     if (contract && userAddress) {
                         const gasInfo = await estimateGasForSwap(amountWei);
                         if (gasInfo) {
                             document.getElementById('gasEstimate').textContent = 
-                                `Gas: ${parseFloat(gasInfo.gasCost).toFixed(6)} MON | Total: ${parseFloat(gasInfo.totalCost).toFixed(6)} MON`;
+                                `Estimated gas: ${parseFloat(gasInfo.gasCost).toFixed(6)} MON (MetaMask will use its own settings)`;
                         }
                     }
                 } catch (error) {
@@ -1514,7 +1529,7 @@
                 }
             }
             
-            // Calculate transfer after tax
+            // Calculate transfer after tax (0.01%)
             function calculateTransfer() {
                 const amount = document.getElementById('transferAmount').value;
                 if (!amount || parseFloat(amount) <= 0) {
@@ -1522,9 +1537,16 @@
                     return;
                 }
                 
-                const tax = parseFloat(amount) * 0.01;
+                // 计算0.01%税费
+                const tax = parseFloat(amount) * TAX_RATE; // 0.01%
                 const received = parseFloat(amount) - tax;
-                document.getElementById('transferReceive').value = received.toFixed(2);
+                
+                // 显示结果，保留足够的小数位
+                document.getElementById('transferReceive').value = received.toFixed(6);
+                
+                // 更新中奖概率显示
+                const chancePercent = (0.01).toFixed(4);
+                document.getElementById('transferChance').textContent = `Chance to win prize: ${chancePercent}%`;
             }
             
             // Update donate UI based on selected type
@@ -1602,7 +1624,7 @@
                         setTimeout(checkNetworkAndConnect, 500);
                     }
                     
-                    console.log('PPT DApp initialized successfully');
+                    console.log('PPT DApp initialized successfully with new contract');
                 }
             }
             
