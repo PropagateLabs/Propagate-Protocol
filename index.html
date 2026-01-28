@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Propagate Protocol Token (PPT) - Meme Revolution!</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Fredoka+One&display=swap">
-    <!-- 使用备用CDN加载ethers.js -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.0/dist/ethers.min.js"></script>
     <style>
         :root {
@@ -200,7 +199,7 @@
         /* Main Content */
         .main-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }
@@ -229,10 +228,6 @@
         
         .card-3 {
             border-color: var(--accent);
-        }
-        
-        .card-4 {
-            border-color: var(--success);
         }
         
         .card-title {
@@ -317,11 +312,6 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 10px;
-        }
-        
-        .btn-claim {
-            background: var(--meme-gradient);
-            color: var(--dark);
         }
         
         .btn-swap {
@@ -561,6 +551,26 @@
             border-top-color: var(--light);
             animation: spin 1s ease-in-out infinite;
         }
+        
+        /* Gas Info */
+        .gas-info {
+            background: rgba(255, 209, 102, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--accent);
+        }
+        
+        /* Rate Info */
+        .rate-info {
+            background: rgba(0, 229, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -599,47 +609,32 @@
         
         <!-- Main Content Cards -->
         <div class="main-content">
-            <!-- Airdrop Card -->
+            <!-- Swap Card -->
             <div class="card card-1">
                 <div class="card-header">
                     <div class="card-title">
-                        <span>🎁</span> Free Airdrop Claim
-                    </div>
-                    <button class="card-add-token add-token-card-btn" data-card="airdrop">+ Add PPT</button>
-                </div>
-                <p style="margin-bottom: 20px; color: var(--accent);">Claim your FREE 100 PPT tokens! One claim per wallet.</p>
-                <div class="input-group">
-                    <div class="input-label">Your Wallet Address</div>
-                    <input type="text" class="input-field" id="airdropAddress" placeholder="0x..." readonly>
-                </div>
-                <div class="balance-info" id="airdropStatus">Status: Connect wallet to check</div>
-                <button class="action-button btn-claim" id="claimAirdrop">CLAIM 100 PPT!</button>
-            </div>
-            
-            <!-- Swap Card -->
-            <div class="card card-2">
-                <div class="card-header">
-                    <div class="card-title">
-                        <span>🔄</span> Swap PHRS for PPT
+                        <span>🔄</span> Swap MON for PPT
                     </div>
                     <button class="card-add-token add-token-card-btn" data-card="swap">+ Add PPT</button>
                 </div>
-                <p style="margin-bottom: 20px; color: var(--secondary);">Exchange your PHRS for PPT tokens at current rate.</p>
+                <p style="margin-bottom: 20px; color: var(--secondary);">Exchange your MON for PPT tokens at fixed rate of 1 MON = 10,000 PPT</p>
                 <div class="input-group">
-                    <div class="input-label">PHRS Amount</div>
-                    <input type="number" class="input-field" id="swapAmount" placeholder="0.1" min="0" step="0.001">
-                    <div class="balance-info">Your PHRS balance: <span id="phrsBalance">0</span> PHRS</div>
+                    <div class="input-label">MON Amount to Swap</div>
+                    <input type="number" class="input-field" id="swapAmount" placeholder="1.0" min="0" step="0.01" value="1">
+                    <div class="balance-info">Your MON balance: <span id="monBalance">0</span> MON</div>
                 </div>
                 <div class="input-group">
                     <div class="input-label">PPT You'll Receive</div>
                     <input type="text" class="input-field" id="pptToReceive" placeholder="0" readonly>
                 </div>
-                <div class="balance-info">Current rate: <span id="currentRateDisplay">0</span> PPT per PHRS</div>
+                <div class="balance-info">Fixed rate: 10,000 PPT per MON</div>
+                <div class="rate-info">Rate details: 1 MON = 10,000 PPT (fixed rate)</div>
+                <div class="gas-info" id="gasEstimate">Gas estimate: -</div>
                 <button class="action-button btn-swap" id="swapTokens">SWAP NOW!</button>
             </div>
             
             <!-- Transfer Card -->
-            <div class="card card-3">
+            <div class="card card-2">
                 <div class="card-header">
                     <div class="card-title">
                         <span>💸</span> Transfer PPT
@@ -653,7 +648,7 @@
                 </div>
                 <div class="input-group">
                     <div class="input-label">PPT Amount</div>
-                    <input type="number" class="input-field" id="transferAmount" placeholder="100" min="0" step="1">
+                    <input type="number" class="input-field" id="transferAmount" placeholder="1000" min="0" step="100" value="1000">
                     <div class="balance-info">Your PPT balance: <span id="pptBalance">0</span> PPT</div>
                 </div>
                 <div class="input-group">
@@ -666,29 +661,29 @@
             </div>
             
             <!-- Donate Card -->
-            <div class="card card-4">
+            <div class="card card-3">
                 <div class="card-header">
                     <div class="card-title">
                         <span>🎗️</span> Donate & Support
                     </div>
                     <button class="card-add-token add-token-card-btn" data-card="donate">+ Add PPT</button>
                 </div>
-                <p style="margin-bottom: 20px; color: var(--success);">Donate PHRS or PPT to support the project and grow the prize pool!</p>
+                <p style="margin-bottom: 20px; color: var(--success);">Donate MON or PPT to support the project and grow the prize pool!</p>
                 
                 <div class="donate-options">
-                    <button class="donate-option active" data-type="phrs">PHRS</button>
+                    <button class="donate-option active" data-type="mon">MON</button>
                     <button class="donate-option" data-type="ppt">PPT</button>
                 </div>
                 
-                <div class="input-group" id="phrsDonateGroup">
-                    <div class="input-label">PHRS Amount to Donate</div>
-                    <input type="number" class="input-field" id="phrsDonateAmount" placeholder="0.01" min="0" step="0.001">
+                <div class="input-group" id="monDonateGroup">
+                    <div class="input-label">MON Amount to Donate</div>
+                    <input type="number" class="input-field" id="monDonateAmount" placeholder="0.1" min="0" step="0.01" value="0.1">
                     <div class="balance-info">Directly supports the prize pool</div>
                 </div>
                 
                 <div class="input-group" id="pptDonateGroup" style="display: none;">
                     <div class="input-label">PPT Amount to Donate</div>
-                    <input type="number" class="input-field" id="pptDonateAmount" placeholder="100" min="0" step="1">
+                    <input type="number" class="input-field" id="pptDonateAmount" placeholder="1000" min="0" step="100" value="1000">
                     <div class="balance-info">1% tax applies (0.5% burned, 0.5% to prize pool)</div>
                 </div>
                 
@@ -699,12 +694,8 @@
         <!-- Stats Banner -->
         <div class="stats-banner" id="statsBanner">
             <div class="stat-item">
-                <div class="stat-value" id="totalSupply">0</div>
+                <div class="stat-value" id="totalSupply">1T</div>
                 <div class="stat-label">Total Supply</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-value" id="airdropped">0</div>
-                <div class="stat-label">Airdropped</div>
             </div>
             <div class="stat-item">
                 <div class="stat-value" id="swapped">0</div>
@@ -719,11 +710,11 @@
                 <div class="stat-label">Total Burned</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value" id="currentRate">0</div>
+                <div class="stat-value" id="currentRate">10,000</div>
                 <div class="stat-label">Current Rate</div>
             </div>
             <div class="stat-item">
-                <div class="stat-value" id="contractBalance">0 PHRS</div>
+                <div class="stat-value" id="contractBalance">0 MON</div>
                 <div class="stat-label">Contract Balance</div>
             </div>
         </div>
@@ -731,10 +722,10 @@
         <!-- Footer -->
         <footer>
             <p>Propagate Protocol Token (PPT) - The Meme Token with Purpose!</p>
-            <p>Contract Address (Atlantic Testnet):</p>
-            <div class="contract-address" id="contractAddress">0x1E04197BA40288c603f44E2e51d1E8cfc220f127</div>
+            <p>Contract Address (Monad Testnet):</p>
+            <div class="contract-address" id="contractAddress">0xE98bAF13bA17A768E009b557B96fbB3dd4f7824a</div>
             <p style="margin-top: 20px; font-size: 14px;">Remember: 1% tax on transfers, 0.5% burned forever, 0.5% to prize pool!</p>
-            <p style="margin-top: 10px; font-size: 12px; color: var(--accent);">Network: Atlantic Testnet (Chain ID: 688689)</p>
+            <p style="margin-top: 10px; font-size: 12px; color: var(--accent);">Network: Monad Testnet (Chain ID: 10143)</p>
         </footer>
     </div>
     
@@ -745,7 +736,6 @@
         // 检查ethers是否加载成功
         if (typeof ethers === 'undefined') {
             console.error('Ethers.js failed to load, trying alternative CDN...');
-            // 尝试从另一个CDN加载
             const script = document.createElement('script');
             script.src = 'https://unpkg.com/ethers@5.7.0/dist/ethers.umd.min.js';
             script.onload = function() {
@@ -764,70 +754,60 @@
         
         // 初始化应用
         function initializeApp() {
-            // Atlantic Testnet Configuration
-            const ATLANTIC_TESTNET = {
-                chainId: '0xA83D41', // 688689 in hex
-                chainIdDecimal: 688689,
-                chainName: 'Atlantic Testnet',
+            // Monad Testnet Configuration
+            const MONAD_TESTNET = {
+                chainId: '0x279F',
+                chainIdDecimal: 10143,
+                chainName: 'Monad Testnet',
                 nativeCurrency: {
-                    name: 'PHRS',
-                    symbol: 'PHRS',
+                    name: 'MON',
+                    symbol: 'MON',
                     decimals: 18
                 },
-                rpcUrls: ['https://atlantic.dplabs-internal.com'],
-                blockExplorerUrls: ['https://atlantic.pharosscan.xyz/']
+                rpcUrls: ['https://testnet.monad.xyz'],
+                blockExplorerUrls: ['https://testnet.monad.xyz/']
             };
             
-            // Contract configuration
-            const CONTRACT_ADDRESS = "0x1E04197BA40288c603f44E2e51d1E8cfc220f127";
+            // Contract configuration - 更新为新的合约地址
+            const CONTRACT_ADDRESS = "0xE98bAF13bA17A768E009b557B96fbB3dd4f7824a";
             const CONTRACT_ABI = [
-                "function claim() external",
                 "function swap() external payable",
                 "function transfer(address to, uint256 amount) public returns (bool)",
                 "function transferFrom(address from, address to, uint256 amount) public returns (bool)",
-                "function getStats() external view returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256)",
-                "function getCurrentRate() public view returns (uint256)",
+                "function getStats() external view returns (uint256 totalSupply, uint256 swapped, uint256 tokenPrizePoolAmount, uint256 burned, uint256 currentRate, uint256 contractMonBalance, uint256 contractPptBalance, uint256 transfersCount)",
+                "function getCurrentRate() public pure returns (uint256)",
+                "function getRemainingSwapPool() public view returns (uint256)",
+                "function getPrizeInfo() external view returns (uint256 prizePoolPPT, uint256 prizePoolMON, uint256 chancePercent, uint256 timeSinceLastPrize)",
                 "function balanceOf(address account) external view returns (uint256)",
                 "function allowance(address owner, address spender) external view returns (uint256)",
                 "function approve(address spender, uint256 amount) external returns (bool)",
-                "event Swapped(address indexed user, uint256 pharosIn, uint256 tokensOut)",
-                "event PrizeWon(address indexed winner, uint256 tokenPrize, uint256 pharosPrize)"
+                "event Swapped(address indexed user, uint256 monAmount, uint256 pptAmount)",
+                "event PrizeWon(address indexed winner, uint256 tokenPrize, uint256 monPrize)",
+                "event TokensBurned(uint256 amount)",
+                "event DonationReceived(address donor, uint256 amount, bool isMon)"
             ];
             
             // Global variables
             let provider, signer, contract, userAddress, userBalance, userPPTBalance;
-            let donateType = "phrs";
-            let isAtlanticNetwork = false;
+            let donateType = "mon";
+            let isMonadNetwork = false;
             let statsInterval;
+            
+            // 固定兑换率：1 MON = 10,000 PPT
+            const FIXED_RATE = 10000;
             
             // 初始化事件监听器
             function setupEventListeners() {
-                // Connect wallet button
                 document.getElementById('connectWallet').addEventListener('click', checkNetworkAndConnect);
-                
-                // Add token button
                 document.getElementById('addTokenBtn').addEventListener('click', addToken);
-                
-                // Card add token buttons
                 document.querySelectorAll('.add-token-card-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         addToken();
                     });
                 });
-                
-                // Claim airdrop button
-                document.getElementById('claimAirdrop').addEventListener('click', claimAirdrop);
-                
-                // Swap button
                 document.getElementById('swapTokens').addEventListener('click', swapTokens);
-                
-                // Transfer button
                 document.getElementById('transferTokens').addEventListener('click', transferTokens);
-                
-                // Donate button
                 document.getElementById('donateTokens').addEventListener('click', donateTokens);
-                
-                // Donate type buttons
                 document.querySelectorAll('.donate-option').forEach(btn => {
                     btn.addEventListener('click', function() {
                         document.querySelectorAll('.donate-option').forEach(b => b.classList.remove('active'));
@@ -836,14 +816,8 @@
                         updateDonateUI();
                     });
                 });
-                
-                // Swap amount input - calculate PPT to receive
                 document.getElementById('swapAmount').addEventListener('input', calculateSwap);
-                
-                // Transfer amount input - calculate after tax
                 document.getElementById('transferAmount').addEventListener('input', calculateTransfer);
-                
-                // Contract address click to copy
                 document.getElementById('contractAddress').addEventListener('click', function() {
                     navigator.clipboard.writeText(CONTRACT_ADDRESS);
                     showNotification("Contract address copied to clipboard!", "info");
@@ -856,7 +830,6 @@
                     if (typeof window.ethereum !== 'undefined') {
                         provider = new ethers.providers.Web3Provider(window.ethereum);
                         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-                        
                         console.log('Web3 initialized successfully');
                         return true;
                     } else {
@@ -874,20 +847,39 @@
             async function loadContractInfo() {
                 try {
                     if (!contract) {
-                        // 如果合约未初始化，尝试初始化
                         if (!initializeWeb3()) {
                             return;
                         }
                     }
-                    
-                    // 尝试获取合约信息
                     await updateStats();
-                    
                 } catch (error) {
                     console.error('Error loading contract info:', error);
-                    // 即使出错也显示默认值
-                    document.getElementById('totalSupply').textContent = "1,000,000,000,000";
+                    document.getElementById('totalSupply').textContent = "1T";
                     document.getElementById('topPrizeAmount').textContent = "Prize Pool Loading...";
+                }
+            }
+            
+            // 估算Gas费用
+            async function estimateGasForSwap(amountWei) {
+                try {
+                    if (!contract || !userAddress) return "0";
+                    
+                    // 估算gas
+                    const gasEstimate = await contract.estimateGas.swap({ value: amountWei });
+                    const gasPrice = await provider.getGasPrice();
+                    
+                    // 计算gas费用
+                    const gasCost = gasEstimate.mul(gasPrice);
+                    const gasCostFormatted = ethers.utils.formatEther(gasCost);
+                    
+                    return {
+                        gasEstimate: gasEstimate.toString(),
+                        gasCost: gasCostFormatted,
+                        totalCost: ethers.utils.formatEther(amountWei.add(gasCost))
+                    };
+                } catch (error) {
+                    console.error("Error estimating gas:", error);
+                    return null;
                 }
             }
             
@@ -900,7 +892,6 @@
                         }
                     }
                     
-                    // 获取当前的链ID
                     let chainId;
                     try {
                         const network = await provider.getNetwork();
@@ -912,26 +903,19 @@
                         console.log('Current chain ID from ethereum:', chainId);
                     }
                     
-                    // 检查链ID（十进制和十六进制格式）
                     const chainIdNum = parseInt(chainId, chainId.startsWith('0x') ? 16 : 10);
                     
-                    if (chainIdNum === ATLANTIC_TESTNET.chainIdDecimal) {
-                        isAtlanticNetwork = true;
-                        document.getElementById('networkStatus').textContent = "Network: Atlantic Testnet";
-                        
-                        // Connect wallet
+                    if (chainIdNum === MONAD_TESTNET.chainIdDecimal) {
+                        isMonadNetwork = true;
+                        document.getElementById('networkStatus').textContent = "Network: Monad Testnet";
                         await connectWallet();
                     } else {
-                        isAtlanticNetwork = false;
+                        isMonadNetwork = false;
                         document.getElementById('networkStatus').textContent = `Network: Wrong Network (ID: ${chainIdNum})`;
-                        
-                        // Show notification to switch network
-                        showNotification("Please switch to Atlantic Testnet (Chain ID: 688689)", "warning");
-                        
-                        // Enable network switch button
+                        showNotification("Please switch to Monad Testnet (Chain ID: 10143)", "warning");
                         const connectBtn = document.getElementById('connectWallet');
-                        connectBtn.innerHTML = '<span>Switch to Atlantic Testnet</span>';
-                        connectBtn.onclick = switchToAtlanticNetwork;
+                        connectBtn.innerHTML = '<span>Switch to Monad Testnet</span>';
+                        connectBtn.onclick = switchToMonadNetwork;
                     }
                 } catch (error) {
                     console.error("Error checking network:", error);
@@ -939,20 +923,19 @@
                 }
             }
             
-            // Switch to Atlantic Testnet
-            async function switchToAtlanticNetwork() {
+            // Switch to Monad Testnet
+            async function switchToMonadNetwork() {
                 try {
-                    console.log('Attempting to switch to Atlantic Testnet...');
-                    
-                    const hexChainId = `0x${ATLANTIC_TESTNET.chainIdDecimal.toString(16)}`;
+                    console.log('Attempting to switch to Monad Testnet...');
+                    const hexChainId = `0x${MONAD_TESTNET.chainIdDecimal.toString(16)}`;
                     
                     try {
                         await window.ethereum.request({
                             method: 'wallet_switchEthereumChain',
                             params: [{ chainId: hexChainId }],
                         });
-                        console.log('Successfully switched to Atlantic Testnet');
-                        showNotification("Switched to Atlantic Testnet!", "success");
+                        console.log('Successfully switched to Monad Testnet');
+                        showNotification("Switched to Monad Testnet!", "success");
                     } catch (switchError) {
                         console.log('Switch error:', switchError);
                         
@@ -962,20 +945,18 @@
                                     method: 'wallet_addEthereumChain',
                                     params: [{
                                         chainId: hexChainId,
-                                        chainName: ATLANTIC_TESTNET.chainName,
-                                        nativeCurrency: ATLANTIC_TESTNET.nativeCurrency,
-                                        rpcUrls: ATLANTIC_TESTNET.rpcUrls,
-                                        blockExplorerUrls: ATLANTIC_TESTNET.blockExplorerUrls
+                                        chainName: MONAD_TESTNET.chainName,
+                                        nativeCurrency: MONAD_TESTNET.nativeCurrency,
+                                        rpcUrls: MONAD_TESTNET.rpcUrls,
+                                        blockExplorerUrls: MONAD_TESTNET.blockExplorerUrls
                                     }]
                                 });
-                                console.log('Successfully added Atlantic Testnet');
-                                showNotification("Atlantic Testnet added successfully!", "success");
+                                console.log('Successfully added Monad Testnet');
+                                showNotification("Monad Testnet added successfully!", "success");
                             } catch (addError) {
                                 console.error('Add error:', addError);
-                                
                                 if (addError.message && addError.message.includes('same RPC endpoint')) {
-                                    showNotification("Atlantic Testnet is already in your wallet. Switching...", "info");
-                                    
+                                    showNotification("Monad Testnet is already in your wallet. Switching...", "info");
                                     setTimeout(() => {
                                         window.ethereum.emit('chainChanged', hexChainId);
                                     }, 1000);
@@ -988,20 +969,17 @@
                         }
                     }
                     
-                    // 等待网络切换完成，然后重新检查
                     setTimeout(() => {
                         checkNetworkAndConnect();
                     }, 1500);
                     
                 } catch (error) {
                     console.error("Error switching network:", error);
-                    
                     if (error.code === 4001) {
                         showNotification("Network switch rejected by user", "error");
                     } else {
                         showNotification("Failed to switch network: " + error.message, "error");
                     }
-                    
                     const connectBtn = document.getElementById('connectWallet');
                     connectBtn.innerHTML = '<span>Connect Wallet</span>';
                     connectBtn.onclick = checkNetworkAndConnect;
@@ -1019,7 +997,6 @@
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                     signer = provider.getSigner();
                     userAddress = await signer.getAddress();
-                    
                     contract = contract.connect(signer);
                     
                     updateUI();
@@ -1052,8 +1029,8 @@
                         return;
                     }
                     
-                    if (!isAtlanticNetwork) {
-                        showNotification("Please switch to Atlantic Testnet first!", "info");
+                    if (!isMonadNetwork) {
+                        showNotification("Please switch to Monad Testnet first!", "info");
                         return;
                     }
                     
@@ -1084,27 +1061,19 @@
             // Update UI with wallet info
             async function updateUI() {
                 const connectBtn = document.getElementById('connectWallet');
-                const airdropAddressInput = document.getElementById('airdropAddress');
                 
                 if (userAddress) {
                     const shortAddress = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
-                    
                     connectBtn.innerHTML = `
                         <div class="wallet-info">
                             <span>${shortAddress}</span>
                             <div class="wallet-balance" id="walletBalanceDisplay">Loading balances...</div>
                         </div>
                     `;
-                    
-                    airdropAddressInput.value = userAddress;
-                    
-                    checkAirdropStatus();
                     updateWalletBalanceDisplay();
                 } else {
                     connectBtn.innerHTML = '<span>Connect Wallet</span>';
                     connectBtn.onclick = checkNetworkAndConnect;
-                    airdropAddressInput.value = "";
-                    document.getElementById('airdropStatus').textContent = "Status: Connect wallet to check";
                 }
             }
             
@@ -1113,8 +1082,8 @@
                 try {
                     if (!provider || !userAddress) return;
                     
-                    const phrsBalance = await provider.getBalance(userAddress);
-                    const phrsBalanceFormatted = ethers.utils.formatEther(phrsBalance);
+                    const monBalance = await provider.getBalance(userAddress);
+                    const monBalanceFormatted = ethers.utils.formatEther(monBalance);
                     
                     let pptBalanceFormatted = "0";
                     try {
@@ -1124,8 +1093,7 @@
                         console.error("Error getting PPT balance:", error);
                     }
                     
-                    const displayText = `PHRS: ${parseFloat(phrsBalanceFormatted).toFixed(2)} | PPT: ${parseFloat(pptBalanceFormatted).toFixed(2)}`;
-                    
+                    const displayText = `MON: ${parseFloat(monBalanceFormatted).toFixed(2)} | PPT: ${parseFloat(pptBalanceFormatted).toFixed(2)}`;
                     const walletBalanceDisplay = document.getElementById('walletBalanceDisplay');
                     if (walletBalanceDisplay) {
                         walletBalanceDisplay.textContent = displayText;
@@ -1146,8 +1114,8 @@
                     if (!provider || !userAddress) return;
                     
                     userBalance = await provider.getBalance(userAddress);
-                    const phrsBalanceFormatted = ethers.utils.formatEther(userBalance);
-                    document.getElementById('phrsBalance').textContent = parseFloat(phrsBalanceFormatted).toFixed(4);
+                    const monBalanceFormatted = ethers.utils.formatEther(userBalance);
+                    document.getElementById('monBalance').textContent = parseFloat(monBalanceFormatted).toFixed(4);
                     
                     userPPTBalance = await contract.balanceOf(userAddress);
                     const pptBalanceFormatted = ethers.utils.formatEther(userPPTBalance);
@@ -1160,127 +1128,46 @@
                 }
             }
             
-            // Update stats from contract
+            // Update stats from contract - 完整版本，使用从链上获取的真实数据
             async function updateStats() {
                 try {
                     if (!contract) return;
                     
                     const stats = await contract.getStats();
+                    const totalSupply = stats[0];
+                    const swapped = stats[1];
+                    const tokenPrizePoolAmount = stats[2];
+                    const burned = stats[3];
+                    const currentRate = stats[4];
+                    const contractMonBalance = stats[5];
                     
                     // 更新顶部奖池显示
-                    const tokenPrizePoolFormatted = formatNumber(ethers.utils.formatEther(stats[3]));
-                    const contractBalanceFormatted = parseFloat(ethers.utils.formatEther(stats[6])).toFixed(2);
+                    const tokenPrizePoolFormatted = formatNumber(ethers.utils.formatEther(tokenPrizePoolAmount));
+                    const contractBalanceFormatted = parseFloat(ethers.utils.formatEther(contractMonBalance)).toFixed(2);
                     document.getElementById('topPrizeAmount').textContent = 
-                        `${tokenPrizePoolFormatted} PPT + ${contractBalanceFormatted} PHRS`;
+                        `${tokenPrizePoolFormatted} PPT + ${contractBalanceFormatted} MON`;
                     
-                    // 更新统计信息
-                    document.getElementById('totalSupply').textContent = formatNumber(ethers.utils.formatEther(stats[0]));
-                    document.getElementById('airdropped').textContent = formatNumber(ethers.utils.formatEther(stats[1]));
-                    document.getElementById('swapped').textContent = formatNumber(ethers.utils.formatEther(stats[2]));
-                    document.getElementById('tokenPrizePool').textContent = formatNumber(ethers.utils.formatEther(stats[3]));
-                    document.getElementById('totalBurned').textContent = formatNumber(ethers.utils.formatEther(stats[4]));
-                    
-                    const currentRate = await contract.getCurrentRate();
-                    document.getElementById('currentRate').textContent = formatNumber(currentRate.toString());
-                    document.getElementById('currentRateDisplay').textContent = formatNumber(currentRate.toString());
-                    
-                    document.getElementById('contractBalance').textContent = contractBalanceFormatted + " PHRS";
+                    // 更新统计数据
+                    document.getElementById('totalSupply').textContent = formatNumber(ethers.utils.formatEther(totalSupply));
+                    document.getElementById('swapped').textContent = formatNumber(ethers.utils.formatEther(swapped));
+                    document.getElementById('tokenPrizePool').textContent = formatNumber(ethers.utils.formatEther(tokenPrizePoolAmount));
+                    document.getElementById('totalBurned').textContent = formatNumber(ethers.utils.formatEther(burned));
+                    document.getElementById('currentRate').textContent = currentRate.toLocaleString();
+                    document.getElementById('contractBalance').textContent = contractBalanceFormatted + " MON";
                     
                 } catch (error) {
                     console.error("Error updating stats:", error);
-                    // 如果合约调用失败，显示默认值
                     updateStatsFallback();
                 }
             }
             
             // 合约调用失败时的备选显示
             function updateStatsFallback() {
-                document.getElementById('totalSupply').textContent = "1,000,000,000,000";
+                document.getElementById('totalSupply').textContent = "1T";
                 document.getElementById('topPrizeAmount').textContent = "Prize Pool Loading...";
-                document.getElementById('currentRateDisplay').textContent = "10,000";
             }
             
-            // Check airdrop status
-            async function checkAirdropStatus() {
-                try {
-                    if (!contract || !userAddress) return;
-                    
-                    try {
-                        const pptBalance = await contract.balanceOf(userAddress);
-                        const claimAmount = ethers.utils.parseEther("100");
-                        
-                        if (pptBalance.gte(claimAmount)) {
-                            document.getElementById('airdropStatus').textContent = "Status: Already claimed";
-                            document.getElementById('claimAirdrop').disabled = true;
-                        } else {
-                            document.getElementById('airdropStatus').textContent = "Status: Eligible to claim";
-                            document.getElementById('claimAirdrop').disabled = false;
-                        }
-                    } catch (error) {
-                        console.log("Could not check airdrop status, assuming eligible");
-                        document.getElementById('airdropStatus').textContent = "Status: Eligible to claim";
-                        document.getElementById('claimAirdrop').disabled = false;
-                    }
-                    
-                } catch (error) {
-                    console.error("Error checking airdrop status:", error);
-                    document.getElementById('airdropStatus').textContent = "Status: Error checking";
-                }
-            }
-            
-            // Claim airdrop
-            async function claimAirdrop() {
-                try {
-                    if (!userAddress) {
-                        showNotification("Please connect your wallet first!", "error");
-                        return;
-                    }
-                    
-                    if (!isAtlanticNetwork) {
-                        showNotification("Please switch to Atlantic Testnet first!", "error");
-                        return;
-                    }
-                    
-                    const gasEstimate = await contract.estimateGas.claim();
-                    const gasPrice = await provider.getGasPrice();
-                    const gasCost = gasEstimate.mul(gasPrice);
-                    
-                    if (userBalance.lt(gasCost)) {
-                        showNotification(`Insufficient PHRS for gas. Need at least ${ethers.utils.formatEther(gasCost)} PHRS`, "error");
-                        return;
-                    }
-                    
-                    showNotification("Claiming airdrop...", "info");
-                    setButtonLoading('claimAirdrop', true);
-                    
-                    const tx = await contract.claim();
-                    await tx.wait();
-                    
-                    showNotification("Successfully claimed 100 PPT airdrop!", "success");
-                    updateStats();
-                    updateBalances();
-                    checkAirdropStatus();
-                    
-                } catch (error) {
-                    console.error("Error claiming airdrop:", error);
-                    
-                    if (error.code === 4001) {
-                        showNotification("Transaction rejected by user", "error");
-                    } else if (error.message.includes("Already claimed")) {
-                        showNotification("You have already claimed the airdrop!", "error");
-                        document.getElementById('airdropStatus').textContent = "Status: Already claimed";
-                        document.getElementById('claimAirdrop').disabled = true;
-                    } else if (error.message.includes("Airdrop exhausted")) {
-                        showNotification("Airdrop pool is exhausted", "error");
-                    } else {
-                        showNotification("Failed to claim airdrop: " + error.message, "error");
-                    }
-                } finally {
-                    setButtonLoading('claimAirdrop', false);
-                }
-            }
-            
-            // Swap PHRS for PPT
+            // Swap MON for PPT - 完整版本，使用真实链上数据
             async function swapTokens() {
                 try {
                     if (!userAddress) {
@@ -1288,8 +1175,8 @@
                         return;
                     }
                     
-                    if (!isAtlanticNetwork) {
-                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                    if (!isMonadNetwork) {
+                        showNotification("Please switch to Monad Testnet first!", "error");
                         return;
                     }
                     
@@ -1302,30 +1189,86 @@
                     const amountWei = ethers.utils.parseEther(amountInput);
                     
                     if (userBalance.lt(amountWei)) {
-                        showNotification(`Insufficient PHRS balance. You have ${ethers.utils.formatEther(userBalance)} PHRS`, "error");
+                        showNotification(`Insufficient MON balance. You have ${ethers.utils.formatEther(userBalance)} MON`, "error");
                         return;
+                    }
+                    
+                    // 检查合约是否还有足够的PPT兑换池
+                    try {
+                        const remainingSwapPool = await contract.getRemainingSwapPool();
+                        const remainingSwapPoolFormatted = ethers.utils.formatEther(remainingSwapPool);
+                        const pptAmount = parseFloat(amountInput) * FIXED_RATE;
+                        const tokensOutWei = ethers.utils.parseEther(pptAmount.toString());
+                        
+                        if (remainingSwapPool.lt(tokensOutWei)) {
+                            showNotification(`Insufficient PPT in swap pool. Remaining: ${formatNumber(remainingSwapPoolFormatted)} PPT`, "error");
+                            return;
+                        }
+                    } catch (error) {
+                        console.error("Error checking swap pool:", error);
+                        // 继续执行，合约会检查
+                    }
+                    
+                    // 估算gas费用
+                    showNotification("Estimating gas fees...", "info");
+                    let gasEstimate;
+                    try {
+                        gasEstimate = await contract.estimateGas.swap({ value: amountWei });
+                    } catch (estimateError) {
+                        console.error("Gas estimation error:", estimateError);
+                        // 如果gas估算失败，使用默认值
+                        gasEstimate = ethers.BigNumber.from("120000");
                     }
                     
                     const gasPrice = await provider.getGasPrice();
-                    const minAmount = gasPrice.mul(21000);
+                    const gasCost = gasEstimate.mul(gasPrice);
                     
-                    if (amountWei.lt(minAmount)) {
-                        showNotification(`Minimum amount required: ${ethers.utils.formatEther(minAmount)} PHRS`, "error");
+                    // 检查余额是否足够支付swap金额+gas费用
+                    const totalRequired = amountWei.add(gasCost);
+                    if (userBalance.lt(totalRequired)) {
+                        showNotification(`Insufficient MON for swap + gas. You need ${ethers.utils.formatEther(totalRequired)} MON (Swap: ${amountInput} + Gas: ${ethers.utils.formatEther(gasCost)})`, "error");
                         return;
                     }
                     
-                    showNotification(`Swapping ${amountInput} PHRS for PPT...`, "info");
+                    showNotification(`Swapping ${amountInput} MON for ${(parseFloat(amountInput) * FIXED_RATE).toLocaleString()} PPT...`, "info");
                     setButtonLoading('swapTokens', true);
                     
-                    const tx = await contract.swap({ value: amountWei });
-                    await tx.wait();
+                    // 发送交易 - 使用正确的gas限额
+                    const tx = await contract.swap({ 
+                        value: amountWei,
+                        gasLimit: gasEstimate.mul(12).div(10) // 增加20%的gas限额
+                    });
                     
-                    showNotification("Swap successful! You received PPT tokens.", "success");
-                    updateStats();
-                    updateBalances();
+                    showNotification("Transaction submitted! Waiting for confirmation...", "info");
+                    const receipt = await tx.wait();
                     
+                    // 检查事件
+                    let eventFound = false;
+                    let tokensReceived = "0";
+                    if (receipt.events) {
+                        for (const event of receipt.events) {
+                            if (event.event === 'Swapped') {
+                                eventFound = true;
+                                tokensReceived = ethers.utils.formatEther(event.args.pptAmount);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (eventFound) {
+                        showNotification(`Swap successful! You received ${parseFloat(tokensReceived).toLocaleString()} PPT tokens.`, "success");
+                    } else {
+                        showNotification("Swap completed. Please check your wallet balance.", "warning");
+                    }
+                    
+                    // 更新统计和余额
+                    await updateStats();
+                    await updateBalances();
+                    
+                    // 重置输入
                     document.getElementById('swapAmount').value = "";
                     document.getElementById('pptToReceive').value = "";
+                    document.getElementById('gasEstimate').textContent = "Gas estimate: -";
                     
                 } catch (error) {
                     console.error("Error swapping tokens:", error);
@@ -1336,6 +1279,16 @@
                         showNotification("Insufficient gas payment. Increase the amount.", "error");
                     } else if (error.message.includes("Swap pool exhausted")) {
                         showNotification("Swap pool is exhausted", "error");
+                    } else if (error.message.includes("Minimum swap is 0.001 MON")) {
+                        showNotification("Minimum swap amount is 0.001 MON", "error");
+                    } else if (error.message.includes("Insufficient PPT in swap pool")) {
+                        showNotification("Insufficient PPT in swap pool. Try a smaller amount.", "error");
+                    } else if (error.message.includes("Swap pool limit reached")) {
+                        showNotification("Swap pool limit reached. No more swaps available.", "error");
+                    } else if (error.message.includes("revert")) {
+                        showNotification("Transaction reverted. Please check if amount is sufficient.", "error");
+                    } else if (error.message.includes("insufficient funds")) {
+                        showNotification("Insufficient funds for swap", "error");
                     } else {
                         showNotification("Failed to swap: " + error.message, "error");
                     }
@@ -1352,8 +1305,8 @@
                         return;
                     }
                     
-                    if (!isAtlanticNetwork) {
-                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                    if (!isMonadNetwork) {
+                        showNotification("Please switch to Monad Testnet first!", "error");
                         return;
                     }
                     
@@ -1387,7 +1340,7 @@
                     const gasCost = gasEstimate.mul(gasPrice);
                     
                     if (userBalance.lt(gasCost)) {
-                        showNotification(`Insufficient PHRS for gas. Need at least ${ethers.utils.formatEther(gasCost)} PHRS`, "error");
+                        showNotification(`Insufficient MON for gas. Need at least ${ethers.utils.formatEther(gasCost)} MON`, "error");
                         return;
                     }
                     
@@ -1426,13 +1379,13 @@
                         return;
                     }
                     
-                    if (!isAtlanticNetwork) {
-                        showNotification("Please switch to Atlantic Testnet first!", "error");
+                    if (!isMonadNetwork) {
+                        showNotification("Please switch to Monad Testnet first!", "error");
                         return;
                     }
                     
-                    if (donateType === "phrs") {
-                        const amountInput = document.getElementById('phrsDonateAmount').value;
+                    if (donateType === "mon") {
+                        const amountInput = document.getElementById('monDonateAmount').value;
                         
                         if (!amountInput || parseFloat(amountInput) <= 0) {
                             showNotification("Please enter a valid amount!", "error");
@@ -1442,23 +1395,21 @@
                         const amountWei = ethers.utils.parseEther(amountInput);
                         
                         if (userBalance.lt(amountWei)) {
-                            showNotification(`Insufficient PHRS balance. You have ${ethers.utils.formatEther(userBalance)} PHRS`, "error");
+                            showNotification(`Insufficient MON balance. You have ${ethers.utils.formatEther(userBalance)} MON`, "error");
                             return;
                         }
                         
-                        showNotification(`Donating ${amountInput} PHRS...`, "info");
+                        showNotification(`Donating ${amountInput} MON...`, "info");
                         setButtonLoading('donateTokens', true);
                         
-                        const tx = await signer.sendTransaction({
-                            to: CONTRACT_ADDRESS,
-                            value: amountWei
-                        });
+                        // 使用合约的donateMon函数
+                        const tx = await contract.donateMon({ value: amountWei });
                         
                         await tx.wait();
                         
                         showNotification("Donation successful! Thank you for supporting the prize pool!", "success");
                         
-                        document.getElementById('phrsDonateAmount').value = "";
+                        document.getElementById('monDonateAmount').value = "";
                         
                     } else {
                         const amountInput = document.getElementById('pptDonateAmount').value;
@@ -1481,7 +1432,7 @@
                         const gasCost = gasEstimate.mul(gasPrice);
                         
                         if (userBalance.lt(gasCost)) {
-                            showNotification(`Insufficient PHRS for gas. Need at least ${ethers.utils.formatEther(gasCost)} PHRS`, "error");
+                            showNotification(`Insufficient MON for gas. Need at least ${ethers.utils.formatEther(gasCost)} MON`, "error");
                             return;
                         }
                         
@@ -1512,22 +1463,54 @@
                 }
             }
             
-            // Calculate PPT to receive from swap
+            // Calculate PPT to receive from swap - 完整版本
             async function calculateSwap() {
                 const amount = document.getElementById('swapAmount').value;
                 if (!amount || parseFloat(amount) <= 0) {
                     document.getElementById('pptToReceive').value = "";
+                    document.getElementById('gasEstimate').textContent = "Gas estimate: -";
                     return;
                 }
                 
                 try {
-                    const rate = await contract.getCurrentRate();
-                    const pptAmount = parseFloat(amount) * parseFloat(rate.toString());
-                    document.getElementById('pptToReceive').value = pptAmount.toFixed(2);
+                    const amountWei = ethers.utils.parseEther(amount);
+                    
+                    // 使用固定兑换率计算PPT数量
+                    const pptAmount = parseFloat(amount) * FIXED_RATE;
+                    
+                    // 显示结果
+                    document.getElementById('pptToReceive').value = pptAmount.toLocaleString();
+                    
+                    // 检查合约是否有足够的PPT兑换池
+                    try {
+                        if (contract && userAddress) {
+                            const remainingSwapPool = await contract.getRemainingSwapPool();
+                            const remainingSwapPoolFormatted = ethers.utils.formatEther(remainingSwapPool);
+                            const tokensOutWei = ethers.utils.parseEther(pptAmount.toString());
+                            
+                            if (remainingSwapPool.lt(tokensOutWei)) {
+                                document.getElementById('pptToReceive').value = `Max: ${formatNumber(remainingSwapPoolFormatted)} PPT`;
+                                showNotification("Swap pool limit may be reached. Try a smaller amount.", "warning");
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error checking swap pool:", error);
+                    }
+                    
+                    // 估算gas费用
+                    if (contract && userAddress) {
+                        const gasInfo = await estimateGasForSwap(amountWei);
+                        if (gasInfo) {
+                            document.getElementById('gasEstimate').textContent = 
+                                `Gas: ${parseFloat(gasInfo.gasCost).toFixed(6)} MON | Total: ${parseFloat(gasInfo.totalCost).toFixed(6)} MON`;
+                        }
+                    }
                 } catch (error) {
-                    const defaultRate = 10000;
-                    const pptAmount = parseFloat(amount) * defaultRate;
-                    document.getElementById('pptToReceive').value = pptAmount.toFixed(2);
+                    console.error("Error calculating swap:", error);
+                    // 如果计算失败，使用简单的近似计算
+                    const pptAmount = parseFloat(amount) * FIXED_RATE;
+                    document.getElementById('pptToReceive').value = pptAmount.toLocaleString();
+                    document.getElementById('gasEstimate').textContent = "Gas estimate: Error calculating";
                 }
             }
             
@@ -1546,11 +1529,11 @@
             
             // Update donate UI based on selected type
             function updateDonateUI() {
-                if (donateType === "phrs") {
-                    document.getElementById('phrsDonateGroup').style.display = 'block';
+                if (donateType === "mon") {
+                    document.getElementById('monDonateGroup').style.display = 'block';
                     document.getElementById('pptDonateGroup').style.display = 'none';
                 } else {
-                    document.getElementById('phrsDonateGroup').style.display = 'none';
+                    document.getElementById('monDonateGroup').style.display = 'none';
                     document.getElementById('pptDonateGroup').style.display = 'block';
                 }
             }
@@ -1579,14 +1562,15 @@
                 }
             }
             
-            // Format large numbers
+            // Format large numbers (用于显示统计信息)
             function formatNumber(numStr) {
                 const num = parseFloat(numStr);
                 if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
                 if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
                 if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
                 if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
-                return num.toFixed(2);
+                if (num >= 1) return num.toLocaleString();
+                return num.toFixed(6);
             }
             
             // 初始化应用
@@ -1595,10 +1579,14 @@
                     setupEventListeners();
                     updateDonateUI();
                     
-                    // 页面加载时立即获取合约信息
+                    // 页面加载后自动计算默认值
+                    setTimeout(() => {
+                        calculateSwap();
+                        calculateTransfer();
+                    }, 1000);
+                    
                     loadContractInfo();
                     
-                    // 设置定时器，每30秒更新一次合约信息
                     statsInterval = setInterval(() => {
                         loadContractInfo();
                     }, 30000);
@@ -1618,7 +1606,6 @@
                 }
             }
             
-            // 启动应用
             init();
         }
     </script>
